@@ -49,10 +49,11 @@ The `findIndex()` function returns the index of the first element in an array th
 8. [x] If the callback returns false, the function should return -1.
 9. [x] If array's length is zero the function should return -1 without calling the callback.
 <!-- Edge cases -->
-10. [ ] The callback should be called for all indexes, including those with unassigned values.
-11. [ ] The callback should process exactly the number of indexes provided at the time the function is run.
-12. [ ] The callback should process any modified element at the time the function visits the element.
-13. [ ] Elements that are deleted by the callback should still be visited by the function.
+10. [x] The callback should be called for all indexes until a passing condition is found, including those with unassigned values.
+11. [?] The range of elements to be processed should be set before the first callback has run.
+12. [x] The callback should not process any elements appended after the function has been called.
+12. [x] The callback should process any modified element at the time the function visits the element.
+13. [x] Elements that are deleted by the callback should still be visited by the function.
 
 
 

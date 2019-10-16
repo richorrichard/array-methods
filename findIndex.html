@@ -4,22 +4,21 @@
   "use strict";
 
   function findIndex(array, callback, thisArg) {
-    
+    var range = array.length;
     var fnCallback = thisArg ? callback.bind(thisArg) : callback.bind(undefined);
 
-    for (var i = 0; i < array.length; i++) {
+    for (var i = 0; i < range; i++) {
       if(fnCallback(array[i], i, array)) {
         return i;
       }
     }
-    
     return -1;
   }
 
-  var smArray =   [1],
-      numArray =  [1,2,3],
+  var smArray   = [1],
+      numArray  = [1,2,3],
       zeroArray = [],
-      tenArray = [,,3,'test',undefined,6,7,,NaN,10];
+      tenArray  = [,,3,'test',undefined,6,7,,NaN,10];
   
   tests({
     'The function should require a callback function as the second arguement and execute the callback once for every index in the array.': function() {
@@ -75,8 +74,59 @@
       eq(callbackCalled, false);
       eq(fndIndex, -1);
     },
-    'The callback should be called for all indexes, including those with unassigned values.': function() {
-      
+    'The callback should be called for all indexes until a passing condition is found, including those with unassigned values.': function() {
+      var visited = 0;
+      var fndIndex = findIndex(tenArray, function(element) {
+        visited++;
+        return element === 10;
+      });
+      eq(fndIndex, 9);
+      eq(visited, 10);
+    },
+    'The range of elements to be processed should be set before the first callback has run.': function() {
+      var visited = 0;
+      findIndex(tenArray, function(element, index) {
+        if(index === 1) {
+          tenArray.push(11);
+        }
+        visited++;
+      });
+      eq(visited, 10);
+      eq(tenArray.length, 11);
+    },
+    'The callback should not process any elements appended after the function has been called.': function() {
+      var fndIndex = findIndex(smArray, function(element) {
+        smArray.push(5);
+        return element > 1;
+      });
+      eq(smArray.length, 2);
+      eq(smArray[1], 5);
+      eq(fndIndex, -1);
+    },
+    'The callback should process any modified element at the time the function visits the element.': function() {
+      var fndIndex = findIndex(numArray, function(element, index) {
+        if(index === 0) {
+          numArray[2] = 5;
+        }
+        return element > 4;
+      });
+      eq(fndIndex, 2);
+      eq(numArray[2], 5);
+    },
+    'Elements that are deleted by the callback should still be visited by the function.': function() {
+      var initialThirdElement = numArray[2];
+      var visited = '';
+      var fndIndex = findIndex(numArray, function(element, index) {
+        if(index === 0) {
+          numArray.splice(2,1);
+        }
+        visited++;
+        return element > 4;
+      });
+      eq(fndIndex, -1);
+      eq(numArray[2], undefined);
+      eq(visited, 3);
     }
+
   });
 </script>
