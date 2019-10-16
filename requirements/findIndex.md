@@ -37,7 +37,7 @@ The `findIndex()` function returns the index of the first element in an array th
 ## Requirements:
 <!-- Callback Parameters -->
 1. [x] The function should require a callback function as the second arguement and execute the callback once for every index in the array.
-2. [x]The callback should accept the `ith` item as the first arguement.
+2. [x] The callback should accept the `ith` item as the first arguement.
 3. [x] The callback should accept the current index as the second arguement.
 4. [x] The callback should accept the original array as the third arguement.
 <!-- Function Parameters -->
