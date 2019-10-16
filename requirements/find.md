@@ -1,3 +1,5 @@
+# array.prototype.find()
+
 # Prototype Implementation:
     function arrayFind(originalArray, callback, thisArg) {
       var arrayFindCallback = callback;
