@@ -1,7 +1,7 @@
 <script src="./simpletest.js"></script>
 <script>
   
-  function arrayFind(array, callback, thisArg) {
+  function find(array, callback, thisArg) {
     var length = array.length;
     var findCallback = callback;
 
@@ -20,33 +20,33 @@
     'callback should run array.length times.': function() {
       var array = [1,2,3];
       var counter = 0;
-      arrayFind(array, function() {
+      find(array, function() {
         counter++;
       });
       eq(counter, 3);
     },
     'If the callback function is true, it should return the current index\'s value from array.': function () {
-      var trueTest = arrayFind([1], function() {
+      var trueTest = find([1], function() {
         return true;
       });
       eq(trueTest, 1);
     },
     'If the callback function is not true, it should return undefined.': function () {
-      var trueTest = arrayFind([1], function() {
+      var trueTest = find([1], function() {
         return false;
       });
       eq(trueTest, undefined);
     },
     'Callback should accept the current element as the first arguement.': function() {
       var array = [1];
-      var foundElement = arrayFind(array, function(element) {
+      var foundElement = find(array, function(element) {
         return element;
       });
       eq(foundElement, 1);
     },
     'Callback should accept the current element\'s index as the second arguement.': function() {
       var array = [1,2,3];
-      var foundElement = arrayFind(array, function(element, index) {
+      var foundElement = find(array, function(element, index) {
         if (index === 1) {
           return true;
         }
@@ -55,35 +55,35 @@
     },
     'Callback should accept the original array as the third arguement.': function() {
       var originalArray = [1];
-      arrayFind(originalArray, function(element, index, array) {
+      find(originalArray, function(element, index, array) {
         eq(originalArray, array);
       });
     },
     'Callback should visit all indexes, even those without assigned values': function() {
       var array = [0,1,,,,5,6];
       var visitedCount = 0;
-      arrayFind(array, function() {
+      find(array, function() {
         visitedCount++;
       });
       eq(visitedCount, array.length);
     },
     'callback should be able to mutate original array': function() {
       var array = [1]; 
-      arrayFind(array, function(element, index){
+      find(array, function(element, index){
         array = [2];
       });
       eq(array[0], 2);
     },
-    'arrayFind() should not mutate original array.': function () {
+    'find() should not mutate original array.': function () {
       var array = [1];
       var arrayCopy = array; 
-      arrayFind(array, function(){});
+      find(array, function(){});
       eq(array === arrayCopy, true);
     },
-    'callback should not process any elements appended after arrayFind() has begun.': function() {
+    'callback should not process any elements appended after find() has begun.': function() {
       var array = [1,2,3,4,5];
       var visited = 0;
-      arrayFind(array, function(element, index, callbackArray) {
+      find(array, function(element, index, callbackArray) {
         if(array[index]===1) {
           array.push(6);
         }
@@ -93,7 +93,7 @@
     },
     'If callback changes an element that has not yet been visited, callback will process that element at the time that element\'s index is run.': function() {
       var array = [1,2,3];
-      var foundElement = arrayFind(array, function(element, index) {
+      var foundElement = find(array, function(element, index) {
         if(index === 0) {
           array[2] = 4;
         }
@@ -104,7 +104,7 @@
     'If callback deletes an element, the index for that element should still be visited.': function() {
       var array = [1,2,3];
       var visited = '';
-      var foundElement = arrayFind(array, function(element, index) {
+      var foundElement = find(array, function(element, index) {
         if(index === 0) {
           delete array[2];
         }
@@ -114,11 +114,11 @@
       });
       eq(visited, 'visited 2 with value undefined');
     },
-    'arrayFind should accept an optional thisArg as the third paremeter, and it should be used as the this value inside each callback call.': function() {
+    'find should accept an optional thisArg as the third paremeter, and it should be used as the this value inside each callback call.': function() {
       array = [1,2,3];
       callbackThis = {'desc': 'This is an optional This arguement'};
       thisTest = '';
-      arrayFind(array, function() {
+      find(array, function() {
         thisTest = this.desc
       }, callbackThis);
       eq(thisTest, 'This is an optional This arguement');
