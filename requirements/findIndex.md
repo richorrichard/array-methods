@@ -5,11 +5,11 @@ The `findIndex()` function returns the index of the first element in an array th
     findIndex(array, callback(element[, index[, array]])[, thisArg])
 
 ## Function Parameters:
+- `array`
 - `callback`
   - `element`
   - `index` _(optional)_
   - `array` _(optional)_  
-
 - `thisArg` _(optional)_
 
 ## Return Value:
