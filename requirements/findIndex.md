@@ -35,28 +35,24 @@ The `findIndex()` function returns the index of the first element in an array th
     }
 
 ## Requirements:
-<!-- Function Parameters -->
-- The function should require an array as the first arguement.
-- The function should require a callback function as the second arguement.
-- The function should accept an optional `thisArg` as the third arguement.
-- If `thisArg` is provided, it should be used as `this` inside the callback.
-- If `thisArg` is not provided, the callback should use `undefined` as its `this` value.
 <!-- Callback Parameters -->
-- The callback should accept the `ith` item as the first arguement.
-- The callback should accept the current index as the second arguement.
-- The callback should accept the original array as the third arguement.
-<!-- Functionality -->
-- It should execute the callback once for every index in the array.
-- If the callback finds an element matching test conditions, the callback should return true.
-- If the callback doesnt find an element matching test conditions, the callback should return false. 
-- If the callback returns true, the function should return the index of the first element in the array.
-- If the callback returns false, the function should return -1.
-- If array's length is zero the function should return -1 without calling the callback.
+1. [x] The function should require a callback function as the second arguement and execute the callback once for every index in the array.
+2. [x]The callback should accept the `ith` item as the first arguement.
+3. [x] The callback should accept the current index as the second arguement.
+4. [x] The callback should accept the original array as the third arguement.
+<!-- Function Parameters -->
+5. [x] If optional `thisArg` is provided, it should be used as `this` inside the callback.
+6. [x] If optional `thisArg` is not provided, the callback should use `undefined` as its `this` value.
+
+<!-- Functionality --> 
+7. [x] If the callback returns true, the function should return the index of that element in the array.
+8. [x] If the callback returns false, the function should return -1.
+9. [x] If array's length is zero the function should return -1 without calling the callback.
 <!-- Edge cases -->
-- The callback should be called for all indexes, including those with unassigned values.
-- The callback should process exactly the number of indexes provided at the time the function is run.
-- The callback should process any modified element at the time the function visits the element.
-- Elements that are deleted by the callback should still be visited by the function.
+10. [ ] The callback should be called for all indexes, including those with unassigned values.
+11. [ ] The callback should process exactly the number of indexes provided at the time the function is run.
+12. [ ] The callback should process any modified element at the time the function visits the element.
+13. [ ] Elements that are deleted by the callback should still be visited by the function.
 
 
 

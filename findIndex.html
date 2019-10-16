@@ -1,0 +1,82 @@
+<script src="./simpletest.js"></script>
+<script>
+  
+  "use strict";
+
+  function findIndex(array, callback, thisArg) {
+    
+    var fnCallback = thisArg ? callback.bind(thisArg) : callback.bind(undefined);
+
+    for (var i = 0; i < array.length; i++) {
+      if(fnCallback(array[i], i, array)) {
+        return i;
+      }
+    }
+    
+    return -1;
+  }
+
+  var smArray =   [1],
+      numArray =  [1,2,3],
+      zeroArray = [],
+      tenArray = [,,3,'test',undefined,6,7,,NaN,10];
+  
+  tests({
+    'The function should require a callback function as the second arguement and execute the callback once for every index in the array.': function() {
+      var timesRun = 0;
+      findIndex(numArray, function() {
+        timesRun++;
+      });
+      eq(timesRun, 3);
+    },
+    'The callback should accept the `ith` item as the first arguement.': function() {
+      findIndex(smArray, function(element) {
+        eq(element, 1);
+      });
+    },
+    'The callback should accept the current index as the second arguement.': function() {
+      findIndex(smArray, function(element, index) {
+        eq(index, 0);
+      });
+    },
+    'The callback should accept the original array as the third arguement.': function() {
+      findIndex(numArray, function(element, index, array) {
+        eq(numArray === array, true);
+      });
+    },
+    'If optional `thisArg` is provided, it should be used as `this` inside the callback.': function() {
+      var customThisObj = {'desc': 'I am an optional this Object'};
+      findIndex(smArray, function() {
+        eq(this.desc, 'I am an optional this Object');
+      }, customThisObj);
+    },
+    'If optional `thisArg` is not provided, the callback should use `undefined` as its `this` value.': function() {
+      findIndex(smArray, function() {
+        eq(this, undefined);
+      });
+    },
+    'If the callback returns true, the function should return the index of that element in the array.': function() {
+      var fndIndex = findIndex(smArray, function(element) {
+        return element < 2;
+      });
+      eq(fndIndex, 0);
+    },
+    'If the callback returns false, the function should return -1.': function() {
+      var fndIndex = findIndex(smArray, function(element) {
+        return element > 2;
+      });
+      eq(fndIndex, -1);
+    },
+    'If array\'s length is zero the function should return -1 without calling the callback.': function() {
+      var callbackCalled = false;
+      var fndIndex = findIndex(zeroArray, function() {
+        callbackCalled = true;
+      });
+      eq(callbackCalled, false);
+      eq(fndIndex, -1);
+    },
+    'The callback should be called for all indexes, including those with unassigned values.': function() {
+      
+    }
+  });
+</script>
