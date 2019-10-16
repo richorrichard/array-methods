@@ -1,11 +1,10 @@
 # findIndex()
-The `findIndex()` method returns the index of the first element in `array` that satisfies the provided testing function. Otherwise, `findIndex()` returns -1, indicating that no element passed the test.
+The `findIndex()` function returns the index of the first element in an array that satisfies the provided testing function. Otherwise, `findIndex()` returns -1, indicating that no element passed the test.
 
 ## Function signature:
     findIndex(array, callback(element[, index[, array]])[, thisArg])
 
 ## Function Parameters:
-
 - `callback`
   - `element`
   - `index` _(optional)_
@@ -36,7 +35,6 @@ The `findIndex()` method returns the index of the first element in `array` that 
     }
 
 ## Requirements:
-
 <!-- Function Parameters -->
 - The function should require an array as the first arguement.
 - The function should require a callback function as the second arguement.
@@ -49,8 +47,8 @@ The `findIndex()` method returns the index of the first element in `array` that 
 - The callback should accept the original array as the third arguement.
 <!-- Functionality -->
 - It should execute the callback once for every index in the array.
-- If the callback finds an element that matches test conditions, the callback should return true.
-- If the callback doesnt find an element, the callback should return false. 
+- If the callback finds an element matching test conditions, the callback should return true.
+- If the callback doesnt find an element matching test conditions, the callback should return false. 
 - If the callback returns true, the function should return the index of the first element in the array.
 - If the callback returns false, the function should return -1.
 - If array's length is zero the function should return -1 without calling the callback.
