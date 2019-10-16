@@ -21,24 +21,24 @@
       tenArray  = [,,3,'test',undefined,6,7,,NaN,10];
   
   tests({
-    'The function should require a callback function as the second arguement and execute the callback once for every index in the array.': function() {
+    'The function should require a callback function as the second parameter and execute the callback once for every index in the array.': function() {
       var timesRun = 0;
       findIndex(numArray, function() {
         timesRun++;
       });
       eq(timesRun, 3);
     },
-    'The callback should accept the `ith` item as the first arguement.': function() {
+    'The callback should accept the `ith` item as the first parameter.': function() {
       findIndex(smArray, function(element) {
         eq(element, 1);
       });
     },
-    'The callback should accept the current index as the second arguement.': function() {
+    'The callback should accept the current index as the second parameter.': function() {
       findIndex(smArray, function(element, index) {
         eq(index, 0);
       });
     },
-    'The callback should accept the original array as the third arguement.': function() {
+    'The callback should accept the original array as the third parameter.': function() {
       findIndex(numArray, function(element, index, array) {
         eq(numArray === array, true);
       });
