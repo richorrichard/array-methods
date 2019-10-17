@@ -47,9 +47,10 @@ The `every()` function tests whether **all** elements in the provided array pass
 13. [ ] The callback should not process any elements appended after the function has been called.
 14. The callback should process any modified element at the time the function visits the element.
 15. [ ] `every()` should not mutate the array on which it was run.
+17. [ ] The callback should be able to mutate the array
 <!-- Edge Cases -->
-16. [ ] The function should return `true` if run on an array containing indexes but no values
-17. [ ] The function should process arrays containing  `undefined` and `null` values.
+18. [ ] The function should return `true` if run on an array containing indexes but no values
+19. [ ] The function should process arrays containing  `undefined` and `null` values.
 
 
  
