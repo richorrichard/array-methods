@@ -3,15 +3,173 @@
   
   "use strict";
 
-  var smArray   = [1],
-      numArray  = [1,2,3],
-      zeroArray = [],
-      tenArray  = [,,3,'test',undefined,6,7,,NaN,10];
+  function every(array, callback, thisArg) {
+    var range = array.length;
+    var fnCallback = thisArg ? callback.bind(thisArg) : callback.bind(undefined);
+
+    if(Object.keys(array).length === 0) {
+      return true;
+    }
+
+    for (var i = 0; i < range; i++) {
+      if(i in array) {
+        if(fnCallback(array[i], i, array) === false) {
+          return false;
+        }
+      }
+    }
+    
+    return true;
+  }
+
+  var smArray     = [1],
+      numArray    = [1,2,3],
+      zeroArray   = [],
+      noValArray  = [,,,,],
+      tenArray    = [,,3,'test',undefined,6,7,,null,10],
+      undefinedArray = [undefined, undefined, undefined],
+      nullArray   = [null, null, null];
   
   tests({
 
-    '': function() {
-    }
+    '1.   The function should require an array as the first parameter, and a callback that should execute once for every array item as the second parameter.': function() {
+      var numTimesRun = 0;
+      every(numArray, function() {
+        numTimesRun++;
+      });
+      eq(numTimesRun, 3);
+    },
+    '2.   The callback should accept the `ith` item as the first arguement.': function() {
+      every(smArray, function(element) {
+        eq(element, 1);
+      });
+    },
+    '3.   The callback should accept the current index as the second arguement.': function() {
+      every(smArray, function(element, index) {
+        eq(index, 0);
+      });
+    },
+    '4.   The callback should accept the original array as the third arguement.': function() {
+      every(numArray, function(element, index, array) {
+        eq(numArray === array, true);
+      });
+    },
+    '5.   If optional `thisArg` is provided, it should be used as `this` inside the callback.': function() {
+      var customThisObj = {'desc': 'I am an optional this Object'};
+      every(smArray, function() {
+        eq(this.desc, 'I am an optional this Object');
+      }, customThisObj);
+    },
+    '6.   If optional `thisArg` is not provided, the callback should use `undefined` as its `this` value.': function() {
+      every(smArray, function() {
+        eq(this, undefined);
+      });
+    },
+    '7.   The function should return true if run on an empty array.': function() {
+      var emptySet = every(zeroArray, function() {});
+      eq(emptySet, true);
+    },
+    '8.   The function should immediately return false if the callback returns a falsy value for ANY array element.': function() {
+      var falseCase = every(numArray, function(element, index) {
+        return element === 3; 
+      });
+      eq(falseCase, false);
+    },
+    '9.   The function should return true if the callback returns a truthy value for EVERY array element.': function() {
+      var trueCase = every(numArray, function(element, index) {
+        return element < 5; 
+      });
+      eq(trueCase, true);
+    },
+    '10.  The callback should not run on indexes without assigned values. ': function() {
+      var numTimesCallbackHasRun = 0;
+      every(tenArray, function() {
+        numTimesCallbackHasRun++;
+      });
+      eq(numTimesCallbackHasRun, 7);
+    },
+    '11.  The callback should not run on indexes which have been deleted by callback.': function() {
+      var numTimesCallbackHasRun = 0;
+      var deletedArray = [1,2,3];
+      every(deletedArray, function(element, i, array) {
+        if(i === 0) {
+          delete array[2];
+        }
+        numTimesCallbackHasRun++;
+      });
+      eq(numTimesCallbackHasRun, 2);
+    },
+    '12.  The range of elements to be processed should be set before the first callback has run.': function() {
+      var pushArray1 = [1,2,3]; // using unique array because it's being mutated
+      var range = pushArray1.length;
+      var numTimesCallbackHasRun = 0;
+      every(pushArray1, function(element, i, array) {
+        if(i === 0) {
+          array.push(4);
+        }
+        numTimesCallbackHasRun++;
+      });
+      eq(range, numTimesCallbackHasRun);
+    },
+    '13.  The callback should not process any elements appended after the function has been called.': function() {
+      // Can probably write a better test for this. More specific and direct.
+      var pushArray2 = [1,2,3]; // using unique array because it's being mutated
+      var rangeLimit = pushArray2.length;
+      var appendedCase = every(pushArray2, function(element, i, array) {
+        if(i === 0) {
+          array.push(4);
+        }
+        if(i > rangeLimit) {
+          return false;
+        }
+        return true;
+      });
+      eq(appendedCase, true);
+    },
+    '14.  The callback should process any modified element at the time the function visits the element.': function() {
+      var modifiedArray1 = [1,2,3];
+      var modifiedCase = every(modifiedArray1, function(element, i, array) {
+        if(i === 0) {
+          array[2] = 1;
+        }
+        return element < 3;
+      });
+      eq(modifiedArray1[2], 1);
+      eq(modifiedCase, true);
+    },
+    '15.  `every()` should not mutate the array on which it was run.': function() {
+      var testArray = numArray;
+      every(numArray, function() {});
+      eq(testArray === numArray, true);
+    },
+    '16.  The callback should be able to mutate the array': function() {
+      var mutatedArray = [1,2,3];
+      var mutatedCase = every(mutatedArray, function(element, i, array) {
+        if(i === 0) {
+          array[2] = 1;
+          array.push(4);
+        }
+      });
+      eq(mutatedArray[2], 1);
+      eq(mutatedArray[3], 4);
+    },
+    '17. The function should return `true` if run on an array containing indexes but no values': function() {
+      var indexedEmptySet = every(noValArray, function() {});
+      eq(indexedEmptySet, true);
+    },
+    '18. The function should process arrays containing  `undefined` and `null` values.': function() {
+      
+      var nullProcessed = false;
+      var undefinedProcessed = false; 
+      every(nullArray, function() {
+        nullProcessed = true;
+      });
+      every(undefinedArray, function() {
+        undefinedProcessed = true;
+      });
+      eq(nullProcessed, true);
+      eq(undefinedProcessed, true);
+    },
     
   });
 </script>

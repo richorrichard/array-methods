@@ -28,17 +28,17 @@
       });
       eq(timesRun, 3);
     },
-    'The callback should accept the `ith` item as the first parameter.': function() {
+    'The callback should accept the `ith` item as the first arguement.': function() {
       findIndex(smArray, function(element) {
         eq(element, 1);
       });
     },
-    'The callback should accept the current index as the second parameter.': function() {
+    'The callback should accept the current index as the second arguement.': function() {
       findIndex(smArray, function(element, index) {
         eq(index, 0);
       });
     },
-    'The callback should accept the original array as the third parameter.': function() {
+    'The callback should accept the original array as the third arguement.': function() {
       findIndex(numArray, function(element, index, array) {
         eq(numArray === array, true);
       });
