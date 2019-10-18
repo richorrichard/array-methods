@@ -16,8 +16,6 @@ The `reduceRight()` function applies a callback function against an accumulator 
 ## Return Value:
 The value that results from the reduction.
 
-## Prototype Implementation:
-
 ## Requirements:
 <!-- Function Parameters (Who are the key parameters and data involved?) -->
 1.  The function should accept the target array as the first arguement.

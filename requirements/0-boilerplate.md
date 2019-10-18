@@ -6,8 +6,6 @@
 
 ## Return Value:
 
-## Prototype Implementation:
-
 ## Requirements:
 
 
