@@ -34,19 +34,19 @@ The value of the first element in `originalArray` that satisfies the provided te
     }
 
 ## Requirements:
-1.  ✔ `callback` should run `array.length` times.
-2.  ✔ If the `callback` function is true, it should return the current index value from `array`. 
-3.  ✔ If the `callback` function is not true, it should return undefined.
-4.  ✔ `callback` should accept the current element as the first arguement.
-5.  ✔ `callback` should accept the current element index as the second arguement.
-6.  ✔ `callback` should accept the original `array` as the third arguement.
-7.  ✔ `callback` should visit all indexes, even those without assigned values.
-8.  ✔ `callback` should be able to mutate original `array`.
-9.  ✔ `arrayFind()` should not mutate original `array`.
-10. ✔ `callback` should not process any elements appended after `arrayFind()` has begun.
-11. ✔ If `callback` changes an element that has not yet been visited, `callback` will process that element at the time that elements index is run.
-12. ✔ If `callback` deletes an element, the index for that element should still be visited.
-13. ✔ `arrayFind()` should accept an optional `thisArg` as the third paremeter, and it should be used as the this value inside each `callback` call.
+1.  ✓ `callback` should run `array.length` times.
+2.  ✓ If the `callback` function is true, it should return the current index value from `array`. 
+3.  ✓ If the `callback` function is not true, it should return undefined.
+4.  ✓ `callback` should accept the current element as the first arguement.
+5.  ✓ `callback` should accept the current element index as the second arguement.
+6.  ✓ `callback` should accept the original `array` as the third arguement.
+7.  ✓ `callback` should visit all indexes, even those without assigned values.
+8.  ✓ `callback` should be able to mutate original `array`.
+9.  ✓ `arrayFind()` should not mutate original `array`.
+10. ✓ `callback` should not process any elements appended after `arrayFind()` has begun.
+11. ✓ If `callback` changes an element that has not yet been visited, `callback` will process that element at the time that elements index is run.
+12. ✓ If `callback` deletes an element, the index for that element should still be visited.
+13. ✓ `arrayFind()` should accept an optional `thisArg` as the third paremeter, and it should be used as the this value inside each `callback` call.
 
 ## Description from Docs
 Executes the `callback` function once per index of `originalArray`, until returns truthy
