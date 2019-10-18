@@ -3,14 +3,14 @@ These are my Watch and Code Array Method recreations. I'm still working through 
 
 ## Exercises (with requirements links):
 
-- [x] [Array.prototype.find ](find.html)
-  - [find() requirements](blob/master/requirements/find.html)
-- [x] [Array.prototype.findIndex](blob/master/findIndex.html)
-  - [findIndex() requirements](blob/master/requirements/findIndex.html)
-- [x] [Array.prototype.every](blob/master/every.html)
-  - [every() requirements](blob/master/requirements/every.html)
-- [x] [Array.prototype.some](blob/master/some.html)
-  - [some() requirements](blob/master/requirements/some.html)
+- [x] [Array.prototype.find ](./find.html)
+  - [find() requirements](./requirements/find.html)
+- [x] [Array.prototype.findIndex](./findIndex.html)
+  - [findIndex() requirements](./requirements/findIndex.html)
+- [x] [Array.prototype.every](./every.html)
+  - [every() requirements](./requirements/every.html)
+- [x] [Array.prototype.some](./some.html)
+  - [some() requirements](./requirements/some.html)
 - [ ] Array.prototype.reduceRight
 - [ ] Array.prototype.concat
 - [ ] Array.prototype.indexOf
