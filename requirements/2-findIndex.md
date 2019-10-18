@@ -36,24 +36,24 @@ The `findIndex()` function returns the index of the first element in an array th
 
 ## Requirements:
 <!-- Callback Parameters -->
-1. ✔ The function should require a callback function as the second arguement and execute the callback once for every index in the array.
-2. ✔ The callback should accept the `ith` item as the first arguement.
-3. ✔ The callback should accept the current index as the second arguement.
-4. ✔ The callback should accept the original array as the third arguement.
+1. ✓ The function should require a callback function as the second arguement and execute the callback once for every index in the array.
+2. ✓ The callback should accept the `ith` item as the first arguement.
+3. ✓ The callback should accept the current index as the second arguement.
+4. ✓ The callback should accept the original array as the third arguement.
 <!-- Function Parameters -->
-5. ✔ If optional `thisArg` is provided, it should be used as `this` inside the callback.
-6. ✔ If optional `thisArg` is not provided, the callback should use `undefined` as its `this` value.
+5. ✓ If optional `thisArg` is provided, it should be used as `this` inside the callback.
+6. ✓ If optional `thisArg` is not provided, the callback should use `undefined` as its `this` value.
 
 <!-- Functionality --> 
-7. ✔ If the callback returns true, the function should return the index of that element in the array.
-8. ✔ If the callback returns false, the function should return -1.
-9. ✔ If array's length is zero the function should return -1 without calling the callback.
+7. ✓ If the callback returns true, the function should return the index of that element in the array.
+8. ✓ If the callback returns false, the function should return -1.
+9. ✓ If array's length is zero the function should return -1 without calling the callback.
 <!-- Edge cases -->
-10. ✔ The callback should be called for all indexes until a passing condition is found, including those with unassigned values.
-11. ✔ The range of elements to be processed should be set before the first callback has run.
-12. ✔ The callback should not process any elements appended after the function has been called.
-12. ✔ The callback should process any modified element at the time the function visits the element.
-13. ✔ Elements that are deleted by the callback should still be visited by the function.
+10. ✓ The callback should be called for all indexes until a passing condition is found, including those with unassigned values.
+11. ✓ The range of elements to be processed should be set before the first callback has run.
+12. ✓ The callback should not process any elements appended after the function has been called.
+12. ✓ The callback should process any modified element at the time the function visits the element.
+13. ✓ Elements that are deleted by the callback should still be visited by the function.
 
 
 
