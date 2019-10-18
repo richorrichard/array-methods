@@ -3,23 +3,23 @@
   
   "use strict";
 
-  function every(array, callback, thisArg) {
+  function some(array, callback, thisArg) {
     var range = array.length;
-    var fnCallback = thisArg ? callback.bind(thisArg) : callback.bind(undefined);
-
-    if(Object.keys(array).length === 0) {
-      return true;
+    var boundCallback = thisArg ? callback.bind(thisArg) : callback.bind(undefined);
+    
+    if (Object.keys(array).length === 0) {
+      return false;
     }
 
     for (var i = 0; i < range; i++) {
-      if(i in array) {
-        if(fnCallback(array[i], i, array) === false) {
-          return false;
+      if (i in array) {
+        if (boundCallback(array[i], i, array)) {
+          return true;
         }
       }
     }
-    
-    return true;
+
+    return false;
   }
 
   var smArray     = [1],
@@ -34,64 +34,70 @@
 
     '1.   The function should require an array as the first parameter, and a callback that should execute once for every array item as the second parameter.': function() {
       var numTimesRun = 0;
-      every(numArray, function() {
+      some(numArray, function() {
         numTimesRun++;
       });
       eq(numTimesRun, 3);
     },
     '2.   The callback should accept the `ith` item as the first arguement.': function() {
-      every(smArray, function(element) {
+      some(smArray, function(element) {
         eq(element, 1);
       });
     },
     '3.   The callback should accept the current index as the second arguement.': function() {
-      every(smArray, function(element, index) {
+      some(smArray, function(element, index) {
         eq(index, 0);
       });
     },
     '4.   The callback should accept the original array as the third arguement.': function() {
-      every(numArray, function(element, index, array) {
+      some(numArray, function(element, index, array) {
         eq(numArray === array, true);
       });
     },
     '5.   If optional `thisArg` is provided, it should be used as `this` inside the callback.': function() {
       var customThisObj = {'desc': 'I am an optional this Object'};
-      every(smArray, function() {
+      some(smArray, function() {
         eq(this.desc, 'I am an optional this Object');
       }, customThisObj);
     },
     '6.   If optional `thisArg` is not provided, the callback should use `undefined` as its `this` value.': function() {
-      every(smArray, function() {
+      some(smArray, function() {
         eq(this, undefined);
       });
     },
-    '7.   The function should return true if run on an empty array.': function() {
-      var emptySet = every(zeroArray, function() {});
-      eq(emptySet, true);
+    '7.  The function should return `false` if run on an empty array. ': function() {
+      var emptyArrayReturnCase = some(zeroArray, function() {});
+      eq(emptyArrayReturnCase, false);
     },
-    '8.   The function should immediately return false if the callback returns a falsy value for ANY array element.': function() {
-      var falseCase = every(numArray, function(element, index) {
-        return element === 3; 
+    '8.  The function should immediately return `true` if the callback returns a true value': function() {
+      var truthyCallbackReturnCase = some(numArray, function() {
+        return true;
       });
-      eq(falseCase, false);
+      eq(truthyCallbackReturnCase, true);
     },
-    '9.   The function should return true if the callback returns a truthy value for EVERY array element.': function() {
-      var trueCase = every(numArray, function(element, index) {
-        return element < 5; 
+    '9.  The function should immediately return `true` if the callback processing returns true for any element in the array.': function() {
+      var truthyCallbackReturnCase = some(numArray, function(element) {
+        return element > 2;
       });
-      eq(trueCase, true);
+      eq(truthyCallbackReturnCase, true);
     },
-    '10.  The callback should not run on indexes without assigned values. ': function() {
+    '10. If the callback never returns a `true` value, the function should return `false`.': function() {
+      var falsyCallbackReturnCase = some(numArray, function(element) {
+        return element > 4;
+      });
+      eq(falsyCallbackReturnCase, false);
+    },
+    '11. The callback should only be run on indexes with explicitly assigned values. (includes `undefined` and `null`)': function() {
       var numTimesCallbackHasRun = 0;
-      every(tenArray, function() {
+      some(tenArray, function() {
         numTimesCallbackHasRun++;
       });
       eq(numTimesCallbackHasRun, 7);
     },
-    '11.  The callback should not run on indexes which have been deleted by callback.': function() {
+    '12. The callback should not run on indexes which have been deleted by callback.': function() {
       var numTimesCallbackHasRun = 0;
-      var deletedArray = [1,2,3];
-      every(deletedArray, function(element, i, array) {
+      var deletedArray = [1,2,3]; // using unique array because it's being mutated
+      some(deletedArray, function(element, i, array) {
         if(i === 0) {
           delete array[2];
         }
@@ -99,11 +105,11 @@
       });
       eq(numTimesCallbackHasRun, 2);
     },
-    '12.  The range of elements to be processed should be set before the first callback has run.': function() {
+    '13. The range of elements to be processed should be set before the first callback has run.': function() {
       var pushArray1 = [1,2,3]; // using unique array because it's being mutated
       var range = pushArray1.length;
       var numTimesCallbackHasRun = 0;
-      every(pushArray1, function(element, i, array) {
+      some(pushArray1, function(element, i, array) {
         if(i === 0) {
           array.push(4);
         }
@@ -111,10 +117,10 @@
       });
       eq(range, numTimesCallbackHasRun);
     },
-    '13.  The callback should not process any elements appended after the function has been called.': function() {
+    '14. The callback should not process any elements appended after the function has been called.': function() {
       var pushArray2 = [1,2,3]; // using unique array because it's being mutated
       var rangeLimit = pushArray2.length;
-      var appendedCase = every(pushArray2, function(element, i, array) {
+      var appendedCase = some(pushArray2, function(element, i, array) {
         if(i === 0) {
           array.push(4);
         }
@@ -125,9 +131,9 @@
       });
       eq(appendedCase, true);
     },
-    '14.  The callback should process any modified element at the time the function visits the element.': function() {
+    '15. The callback should process any modified element at the time the function visits the element.': function() {
       var modifiedArray1 = [1,2,3];
-      var modifiedCase = every(modifiedArray1, function(element, i, array) {
+      var modifiedCase = some(modifiedArray1, function(element, i, array) {
         if(i === 0) {
           array[2] = 1;
         }
@@ -136,14 +142,14 @@
       eq(modifiedArray1[2], 1);
       eq(modifiedCase, true);
     },
-    '15.  `every()` should not mutate the array on which it was run.': function() {
+    '16. `some()` should not mutate the array on which it was run.': function() {
       var testArray = numArray;
-      every(numArray, function() {});
+      some(numArray, function() {});
       eq(testArray === numArray, true);
     },
-    '16.  The callback should be able to mutate the array': function() {
+    '17. The callback should be able to mutate the array': function() {
       var mutatedArray = [1,2,3];
-      var mutatedCase = every(mutatedArray, function(element, i, array) {
+      var mutatedCase = some(mutatedArray, function(element, i, array) {
         if(i === 0) {
           array[2] = 1;
           array.push(4);
@@ -152,17 +158,17 @@
       eq(mutatedArray[2], 1);
       eq(mutatedArray[3], 4);
     },
-    '17. The function should return `true` if run on an array containing indexes but no values': function() {
-      var indexedEmptySet = every(noValArray, function() {});
-      eq(indexedEmptySet, true);
+    '18. The function should return `false` if run on an array containing indexes but no values': function() {
+      var indexedEmptySet = some(noValArray, function() {});
+      eq(indexedEmptySet, false);
     },
-    '18. The function should process arrays containing  `undefined` and `null` values.': function() {
+    '19. The function should process arrays containing only `undefined` or `null` values.': function() {
       var nullProcessed = false;
       var undefinedProcessed = false; 
-      every(nullArray, function() {
+      some(nullArray, function() {
         nullProcessed = true;
       });
-      every(undefinedArray, function() {
+      some(undefinedArray, function() {
         undefinedProcessed = true;
       });
       eq(nullProcessed, true);
