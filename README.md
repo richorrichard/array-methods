@@ -3,7 +3,7 @@ These are my Watch and Code Array Method recreations. I'm still working through 
 
 ## Exercises (with requirements links):
 
-- [x] [Array.prototype.find ](blob/master/find.html)
+- [x] [Array.prototype.find ](find.html)
   - [find() requirements](blob/master/requirements/find.html)
 - [x] [Array.prototype.findIndex](blob/master/findIndex.html)
   - [findIndex() requirements](blob/master/requirements/findIndex.html)
