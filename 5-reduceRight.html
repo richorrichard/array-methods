@@ -10,10 +10,207 @@
       tenArray    = [,,3,'test',undefined,6,7,,null,10],
       undefinedArray = [undefined, undefined, undefined],
       nullArray   = [null, null, null];
+
+  
+  
+  function reduceRight(array, callback, initialValue) {
+    var accumulator;
+    var currentValue;
+    var startingIndex;
+    var range = array.length;
+    var returnedValue;
+    
+    if(!initialValue) { // If initialValue === false
+      if (Object.keys(array).length === 0) { // If empty array
+        throw new TypeError;
+      } else if (Object.keys(array).length === 1) { // If 1 element in array
+        return array[0];
+      } else { // If > 1 element in array
+        accumulator = array[range-1];
+        // Can update to i?--v
+        currentValue = array[range-2];
+        startingIndex = range-2;
+      }
+    } else { // If initialValue === true
+      if(Object.keys(array).length === 0) {
+        return initialValue;
+      }
+      accumulator = initialValue;
+      currentValue = array[range-1];
+      startingIndex = range-1;
+    }
+
+    for (var i = startingIndex; i >= 0 ; i--) {
+      if (i in array) {
+        returnedValue = callback(accumulator, array[i], i, array);
+        accumulator = returnedValue;
+      }
+    }
+
+    return returnedValue;
+    //console.log(returnedValue);
+  }
   
   tests({
 
-    '': function() {},
+    '1.  The callback should accept the function accumulator value as the first arguement.': function () {
+      reduceRight(numArray, function(accumulator, currentValue, i, array) {
+        if(i === 2) {
+          eq(accumulator, 3);
+        }
+      });
+      
+    },
+    '2.  The callback should accept the element\'s `currentValue` as the second arguement.': function () {
+      var numTimesRun = 1;
+      reduceRight(numArray, function(accumulator, currentValue) {
+        if (numTimesRun === 1) { 
+          eq(currentValue, 2);  
+        }
+        numTimesRun++;
+      });
+    },
+    '3.  The callback should accept the current index as the third arguement.': function () {
+      reduceRight(smArray, function(accumulator, currentValue, index) {
+        eq(index, 0);
+      });
+    },
+    '4.  The callback should accept the target array as the fourth arguement.': function () {
+      reduceRight(smArray, function(accumulator, currentValue, index, array) {
+        eq(array === smArray, true);
+      });
+    },
+    '5.  If no `initialValue`, callback should run array.length-1 times.': function() {
+      var callbackCount = 0;
+      reduceRight(numArray, function() {
+        callbackCount++;
+      });
+      eq(callbackCount, 2);
+    },
+    '6.  If no `initialValue`, `accumulator` should be set to the last value of the array.': function() {
+      var numTimesRun = 1;
+      reduceRight(numArray, function(accumulator, currentValue, i, array) {
+        if(numTimesRun === 1) {
+          eq(accumulator, 3);
+        }
+        numTimesRun++;
+      });
+    },
+    '7.  If no `initialValue`, `currentValue` should be set to the second-to-last value of the array.': function() {
+      var numTimesRun = 1;
+      reduceRight(numArray, function(accumulator, currentValue, index, array) {
+        if (numTimesRun === 1) {
+          eq(currentValue, 2);
+        }
+        numTimesRun++;
+      });
+    },
+    '8.  If no `initialValue`, and the array is empty, a `TypeError` should be thrown.': function() {
+      var isTypeError = false;
+      try {
+        reduceRight(zeroArray, function() {});
+      } catch (e) {
+        isTypeError = e instanceof TypeError ? true : false;
+      }
+      eq(isTypeError, true);
+    },
+    '9.  If no `initialValue`, and the array has only one element, that value should be returned without calling callback.': function() {
+      var callbackCount = 0;
+      var singleElementCase = reduceRight(smArray, function() {callbackCount++;});
+      eq(singleElementCase, 1);
+      eq(callbackCount, 0);
+    },
+    '10. If `initialValue`, callback should run array.length times.': function() {
+      var callbackCount = 0;
+      reduceRight(numArray, function() {
+        callbackCount++;
+      }, 5);
+      eq(callbackCount, 3);
+    },
+    '11. If `initialValue`, `accumulator` should be set to `initialValue`.': function() {
+      var globalAccumulator;
+      reduceRight(smArray, function(accumulator, currentValue, index, array) {
+         globalAccumulator = accumulator;
+      }, 5);
+      eq(globalAccumulator, 5);
+    },
+    '12. If `initialValue`, `currentValue` should be set to the last last value in the array.': function() {
+      var numTimesRun = 1;
+      reduceRight(numArray, function(accumulator, currentValue, index, array) {
+        if (numTimesRun === 1) {
+          eq(currentValue, 3);
+        }
+        numTimesRun++;
+      }, 5);
+    },
+    '13. If `initialValue`, and the array is empty, `initialValue` should be returned without calling callback.': function() {
+      var callbackCount = 0;
+      var singleElementCase = reduceRight(zeroArray, function() {callbackCount++;}, 5);
+      eq(singleElementCase, 5);
+      eq(callbackCount, 0);
+    },
+    '14. It should run the callback on all elements in the array from right to left.': function() {
+      var currentIteration = 0
+      reduceRight(numArray, function(accumulator, currentValue, index) {
+        currentIteration++;
+        if (currentIteration === 1) {
+          //console.log('Iteration 1. index is: ', index, ' value is: ', currentValue);
+          eq(currentValue, 2);
+        } 
+      });
+    },
+    '15. The range of elements the function traverses should be set before the first callback.': function() {
+      var callbackCount = 0;
+      var pushArray = [1,2,3];
+      reduceRight(pushArray, function(accumulator, currentValue, index, array) {
+        if(index === 2) {
+          array.push(4);
+        }
+        callbackCount++;
+      });
+      eq(callbackCount, 2);
+    },
+    '16. The callback should not run on holes.': function() {
+      var callbackCount = 0;
+      reduceRight(tenArray, function() {
+        callbackCount++;
+      });
+      eq(callbackCount, 6);
+    },
+    '17. The callback should update the accumulator with the outcome of the function on each iteration (except the last).': function() {
+      var iteration = 1;
+      reduceRight(numArray, function(accumulator, currentValue, index, array) {
+        //console.log('Iteration ', iteration, '. index is:', index, 'accumulator is:', accumulator, 'currentValue is:', currentValue);
+        if (index === 0) {         
+          eq(accumulator, 4);
+        }
+        iteration++;
+        return accumulator + 1;
+      }); 
+    },
+    '18. The function should return the returned value of the callback.': function() {
+      var iteration = 1;
+      var arrayOfArrays = [[0, 1], [2, 3], [4, 5]];
+      var returnedValue = reduceRight(arrayOfArrays, function(accumulator, currentValue, index, array) {
+        //console.log('Iteration ', iteration, '. index is:', index, 'accumulator is:', accumulator, 'currentValue is:', currentValue);
+        iteration++;
+        return accumulator.concat(currentValue);
+      });
+      eq(returnedValue[1], 5);
+      eq(returnedValue[2], 2);
+      eq(returnedValue[5], 1);
+    },
+    '19. If any value before the range max is changed, the callback should process the new value at the time it visits it.': function() {
+      var mutateArray = [1,2,3];
+      var reduceResult = reduceRight(mutateArray, function(accumulator, currentValue, i, array) {
+        if (i === 1) {
+          array[0] = 5;
+        }
+        return accumulator + currentValue;
+      });
+      eq(reduceResult, 10);
+      eq(mutateArray[0], 5);
+    },
     
   });
 </script>

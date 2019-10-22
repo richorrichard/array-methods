@@ -42,12 +42,10 @@ var TinyTestHelper = {
   renderStats: function(tests, failures) {
     var numberOfTests = Object.keys(tests).length;
     var successes = numberOfTests - failures;
-    var summaryString = 'Ran ' + numberOfTests + ' Tests: '
-                        + successes + ' Successes, and '
-                        + failures + ' Failures.';
-                        
-    var summaryElement = document.createElement('h1');
-    summaryElement.textContent = summaryString;
+    var summaryElement = document.createElement('div');
+    summaryElement.innerHTML =  '<h1>Ran ' + numberOfTests + ' Tests:<h1>'
+                                + '<h1>' + successes + ' Successes.</h1>'
+                                + '<h1>' + failures + ' Failures.</h1>'
     document.body.appendChild(summaryElement);
   }
 }

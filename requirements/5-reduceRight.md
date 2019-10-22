@@ -18,32 +18,22 @@ The value that results from the reduction.
 
 ## Requirements:
 <!-- Function Parameters (Who are the key parameters and data involved?) -->
-1.  The function should accept the target array as the first arguement.
-2.  The function should accept a callback function as the second arguement.
-3.  The function should accept an optional `initialValue` as the third arguement.
-<!-- Callback Paremeters -->
-4.  The callback should accept the function accumulator value as the first arguement.
-5.  The callback should accept the current element's value as the second arguement.
-6.  The callback should accept the current index as the third arguement.
-7.  The callback should accept the target array as the third arguement.
-<!-- General Functionality (What should happen generally)-->
-8.  It should traverse the array from right to left.
-9.  The range of elements the function traverses should be set before the first callback.
-10. The callback should not run on holes.
-11. The callback should return the cumulative output of the combination of each iteration.
-12. The function should return the returned value of the callback.
-<!-- ??? (Where does this function run and what needs to be considered?) -->
-<!-- Conditions for Execution (When will it do what it will do?) -->
-13. If `initialValue`, `accumulator` should be set to `initialValue`.
-14. If `initialValue`, `currentValue` should be set to the last last value in the array.
-15. If no `initialValue`, `accumulator` should be set to the last value of the array.
-16. If no `initialValue`, `currentValue` should be set to the second-to-last value of the array.
-17. If no `initialValue`, and the array is empty, a `TypeError` should be thrown.
-18. If `initialValue`, and the array has only one element, `initialValue` should be returned without calling callback.
-19. If no `initialValue`, and the array has only one element, that value should be returned without calling callback.
-<!-- (Why does it do ) -->
-<!-- Logical Checks (How do the mechanics of the logic work?) -->
-20. If any value before the range max is changed, the callback should process the new value at the time it visits it.
-
-
- 
+1.  ✓ The callback should accept the function accumulator value as the first arguement.
+2.  ✓ The callback should accept the element\'s `currentValue` as the second arguement.
+3.  ✓ The callback should accept the current index as the third arguement.
+4.  ✓ The callback should accept the target array as the fourth arguement.
+5.  ✓ If no `initialValue`, callback should run array.length-1 times.
+6.  ✓ If no `initialValue`, `accumulator` should be set to the last value of the array.
+7.  ✓ If no `initialValue`, `currentValue` should be set to the second-to-last value of the array.
+8.  ✓ If no `initialValue`, and the array is empty, a `TypeError` should be thrown.
+9.  ✓ If no `initialValue`, and the array has only one element, that value should be returned without calling callback.
+10. ✓ If `initialValue`, callback should run array.length times.
+11. ✓ If `initialValue`, `accumulator` should be set to `initialValue`.
+12. ✓ If `initialValue`, `currentValue` should be set to the last last value in the array.
+13. ✓ If `initialValue`, and the array is empty, `initialValue` should be returned without calling callback.
+14. ✓ It should run the callback on all elements in the array from right to left.
+15. ✓ The range of elements the function traverses should be set before the first callback.
+16. ✓ The callback should not run on holes.
+17. ✓ The callback should update the accumulator with the outcome of the function on each iteration (except the last).
+18. ✓ The function should return the returned value of the callback.
+19. ✓ If any value before the range max is changed, the callback should process the new value at the time it visits it.
