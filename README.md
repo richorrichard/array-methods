@@ -11,7 +11,8 @@ These are my Watch and Code Array Method recreations. I'm still working through 
   - [every() requirements](./requirements/3-every.md)
 - [x] [Array.prototype.some](./4-some.html)
   - [some() requirements](./requirements/4-some.md)
-- [ ] Array.prototype.reduceRight
+- [x] [Array.prototype.reduceRight](./5-reduceRight.html)
+  - [reduceRight() requirements](./requirements/5-reduceRight.md)
 - [ ] Array.prototype.concat
 - [ ] Array.prototype.indexOf
 - [ ] Array.prototype.lastIndexOf
