@@ -5,6 +5,8 @@
 
   var smArray     = [1],
       numArray    = [1,2,3],
+      numArray2   = [4,5,6],
+      numArray3   = [7,8,9],
       zeroArray   = [],
       noValArray  = [,,,,],
       tenArray    = [,3,'test',undefined,6,7,,null,10,],
@@ -13,16 +15,108 @@
       objectArray = [
         {name: 'Trek', rank: 1},
         {name: 'Specialized', rank: 2},
-        {name: 'Santa Cruz', rank: 3}]
+        {name: 'Santa Cruz', rank: 3}
+      ],
       arrayArray  = [
         [1,2,3],
         [4,5,6],
         [7,8,9]
-      ];
+      ],
+      primArray   = [1, true, 'three'];       
   
+  function concat(array, ...valueN) {
+    var returnArray = [],
+        masterIndex = 0;
+
+    // copy first array
+    for(var i = 0; i < array.length; i++) {
+      if(i in array) {
+        returnArray[i]= array[i];
+      }
+      masterIndex++;
+    }
+
+    // valueN is rest parameter. Block loops through array of args.
+    if(valueN.length > 0) {
+      for(var j = 0; j < valueN.length; j++) {
+        var argValue = valueN[j];
+        if(Array.isArray(argValue)) {
+          for(var k = 0; k < argValue.length; k++) {
+            returnArray[masterIndex] = argValue[k];
+            masterIndex++;
+          }
+        } else {
+          returnArray[masterIndex] = argValue;
+          masterIndex++;
+        }
+      }
+    }
+    return returnArray;
+  }
+
   tests({
 
-    '': function() {},
+    '1.  It should return a new array.': function() {
+      var resultArray = concat(numArray);
+      eq(resultArray !== numArray, true);
+    },
+    '2.  If no values are passed in, it should return a shallow copy of the original array.': function() {
+      var resultArray = concat(numArray);
+      eq(resultArray[0], numArray[0]);
+      eq(resultArray.length, numArray.length);
+    },
+    '3.  The returned array should begin with the original array\'s elements, in order.': function() {
+      var resultArray = concat(numArray, numArray2);
+      eq(resultArray[0], numArray[0]);
+      eq(resultArray[1], numArray[1]);
+      eq(resultArray[2], numArray[2]);
+    },
+    '4.  The returned array should add (in order) each arguement\'s elements (array) or arguement (non-array) to returned array.': function() {
+      var resultArray = concat(numArray, numArray2, 7);
+      eq(resultArray[3], numArray2[0]); // 4
+      eq(resultArray[4], numArray2[1]); // 5
+      eq(resultArray[5], numArray2[2]); // 6
+      eq(resultArray[6], 7); 
+    },
+    '5.  Values with `string`, `number`, and `boolean` types will be copied into new array': function() {
+      var resultArray = concat(numArray, primArray);
+      eq(resultArray[3], 1);
+      eq(resultArray[4], true);
+      eq(resultArray[5], 'three');
+    },
+    '6.  It should not alter `this` or any arguement\'s array or value.': function() {
+      var tempThis = this;
+      concat(numArray);
+      eq(tempThis === this, true);
+    },
+    '7.  If an object reference is copied, both arrays will reference the same original object.': function() {
+      var tempArray = [1,2,3];
+      var tempArray2 = [4,5,6];      
+      var refArray = [tempArray, tempArray2];
+      var resultArray = concat(refArray, numArray);
+      tempArray[1] = 9; // change value in original array object should be accessible through new result array object
+      eq(resultArray[0][1], 9);
+    },
+    '8.  It should not recurse into nested array elements.': function() {
+      var tempArray = [1,2,3];
+      var tempArray2 = [4,5,6];      
+      var refArray = [tempArray, tempArray2];
+      var resultArray = concat(refArray, numArray);
+      eq(resultArray.length, 5); // if it recursed it would be 9 elements long
+    },
+    '9.  New array should contain existing holes.': function() {
+      var resultArray = concat(tenArray, smArray);
+      eq(0 in resultArray, false);
+      eq(resultArray.length, 10);
+    },
+    '10. It should process explicitly defined `undefined` and `null` values.': function() {
+      var nullTest = concat(primArray, nullArray);
+      var undefinedTest = concat(primArray, undefinedArray);
+      eq(nullTest[5], null);
+      eq(nullTest.length, 6);
+      eq(undefinedTest[5], undefined);
+      eq(undefinedTest.length, 6);
+    },
     
   });
 </script>
