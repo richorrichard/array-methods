@@ -7,48 +7,51 @@
       numArray    = [1,2,3],
       zeroArray   = [],
       noValArray  = [,,,,],
-      tenArray    = [,,3,'test',undefined,6,7,,null,10],
+      tenArray    = [,,3,'test',undefined,6,7,,null,10,,],
       undefinedArray = [undefined, undefined, undefined],
       nullArray   = [null, null, null];
 
   
   
   function reduceRight(array, callback, initialValue) {
-    var accumulator;
-    var currentValue;
-    var startingIndex;
-    var range = array.length;
-    var returnedValue;
+    var accumulator = initialValue,
+        startingIndex = array.length-1,
+        keyArray = Object.keys(array),
+        returnedValue;
     
-    if(!initialValue) { // If initialValue === false
-      if (Object.keys(array).length === 0) { // If empty array
+    // If initialValue
+    if(arguments.length !== 3) { 
+      
+      // If empty array
+      if (keyArray.length === 0) { 
         throw new TypeError;
-      } else if (Object.keys(array).length === 1) { // If 1 element in array
-        return array[0];
-      } else { // If > 1 element in array
-        accumulator = array[range-1];
-        // Can update to i?--v
-        currentValue = array[range-2];
-        startingIndex = range-2;
+      // If one element in array
+      } else if (keyArray.length === 1) { 
+        return array[keyArray[0]];
+      // default case
+      } else { 
+        while((startingIndex in array === false) && startingIndex > 0) {
+          startingIndex--;
+        }
+        accumulator = array[startingIndex];
+        startingIndex--;
       }
-    } else { // If initialValue === true
-      if(Object.keys(array).length === 0) {
+
+    // If no initialValue
+    } else { 
+      // if empty array
+      if(keyArray.length === 0) {
         return initialValue;
       }
-      accumulator = initialValue;
-      currentValue = array[range-1];
-      startingIndex = range-1;
     }
 
     for (var i = startingIndex; i >= 0 ; i--) {
       if (i in array) {
-        returnedValue = callback(accumulator, array[i], i, array);
-        accumulator = returnedValue;
+        accumulator = callback(accumulator, array[i], i, array);
       }
     }
 
-    return returnedValue;
-    //console.log(returnedValue);
+    return accumulator;
   }
   
   tests({
@@ -211,6 +214,6 @@
       eq(reduceResult, 10);
       eq(mutateArray[0], 5);
     },
-    
+
   });
 </script>
