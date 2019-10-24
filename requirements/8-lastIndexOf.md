@@ -31,5 +31,5 @@ The `lastIndexOf()` function returns the last index at which a given element can
 11. ✓ If `fromIndex < 0`, array should be processed right to left.
 
 <!-- 4. Edge Cases -->
-12. It should accept holes
-13. It should return index of explicitly defined standard built-in values.
+12. ✓ It should accept holes
+13. ✓ It should return index of explicitly defined standard built-in values.

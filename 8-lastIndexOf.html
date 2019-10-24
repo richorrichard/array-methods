@@ -25,6 +25,7 @@
     if (arguments.length === 0) {
       throw new ReferenceError('You\'re missing an array. Duh.');
     }
+    
     if (!Array.isArray(array)) {
       throw new SyntaxError('You should be running this on an array. Nothing else.');
     }
