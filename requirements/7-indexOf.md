@@ -14,24 +14,24 @@ The `indexOf()` function returns the first index at which a given element can be
 
 ## Requirements:
 <!-- 1. Basic Returns -->
-- If `searchElement === array[i]`, return `i`.
-- If `searchElement` is not found, return `-1`.
-- If `searchElement` is not provided, return `-1`.
+1. ✓ If `searchElement === array[i]`, return `i`.
+2. ✓ If `searchElement` is not found, return `-1`.
+3. ✓ If `searchElement` is not provided, return `-1`.
 
 <!-- 2. Arguement Handling -->
-- If `array` is not provided, throw ReferenceError.
-- If `array` is not an array, throw SyntaxError.
-- If no `fromIndex` is provided, process array starting at `array[0]`.
-- If `fromIndex` is provided, process array starting at `array[fromIndex]`.  
+4. ✓ If `array` `    is not provided, throw ReferenceError.
+5. ✓ If `array` is not an array, throw SyntaxError.
+6. ✓ If no `fromIndex` is provided, process array starting at `array[0]`.
+7. ✓ If `fromIndex` is provided, process array starting at `array[fromIndex]`.  
 
 <!-- 3. Functionality -->
-- If `fromIndex >= array.length`, return `-1` without processing array.
-- If `fromIndex < 0`, process array starting `-(fromIndex)` indexes from the last element of array. 
-- If `fromIndex < 0`, and `-(fromIndex) >= array.length`, return `-1` without processing array.
-- If `fromIndex < 0`, array should be processed front-to-back.
+8. ✓ If `fromIndex >= array.length`, return `-1` without processing array.
+9. ✓ If `fromIndex < 0`, process array starting at `array.length + fromIndex`. 
+10. ✓ If `fromIndex < 0`, and `-fromIndex >= array.length`, return `-1`.
+11. ✓ If `fromIndex < 0`, array should be processed front-to-back.
 
 <!-- 4. Edge Cases -->
-- It should accept holes
-- It should return index of explicitly defined standard built-in values.
+12. ✓ It should accept holes
+13. ✓ It should return index of explicitly defined standard built-in values.
 
  
