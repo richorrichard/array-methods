@@ -5,6 +5,7 @@ The `indexOf()` function returns the first index at which a given element can be
     indexOf(searchElement[, fromIndex]);
 
 ## Function Parameters:
+- `array`
 - `searchElement`
 - `fromIndex` _(optional index to start search at)_
 

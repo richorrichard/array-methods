@@ -5,6 +5,7 @@ The `lastIndexOf()` function returns the last index at which a given element can
     lastIndexOf(searchElement[, fromIndex]);
 
 ## Function Parameters:
+- `array`
 - `searchElement`
 - `fromIndex` _(optional index to start search at)_
 
