@@ -34,3 +34,4 @@ Returns a Boolean. Returns `true` if `valueToFind` is found within the array (or
 <!-- 4. Edge Cases ✓ -->
 - ✓ It should treat holes as undefined
 - ✓ It should process all defined standard primitives.
+- It should handle `NaN` type searches

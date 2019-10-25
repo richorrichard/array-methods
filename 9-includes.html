@@ -8,7 +8,7 @@
       zeroArray   = [],
       noValArray  = [,,,,],
       strArray    = ['one', 'two', 'three'],
-      tenArray    = [,3,'test',undefined,6,7,,null,10,true],
+      tenArray    = [,3,'test',undefined,6,7,NaN,null,10,true],
       undefinedArray = [undefined, undefined, undefined],
       nullArray   = [null, null, null],
       objectArray = [
@@ -49,7 +49,7 @@
     }
 
     for (var i = startingIndex; i < array.length; i++) {
-      if (valueToFind === array[i]) {
+      if (valueToFind === array[i] || (Number.isNaN(valueToFind) && Number.isNaN(array[i]))) {
         return true;
       }
     }
@@ -145,6 +145,9 @@
       eq(indexNumber, true);
       eq(indexString, true);
     },
-  
+    'it should handle `NaN` type searches': function() {
+      var includesResult = includes(tenArray, NaN);
+      eq(includesResult, true);
+    }
   });
 </script>
