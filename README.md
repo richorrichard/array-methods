@@ -19,7 +19,8 @@ These are my Watch and Code Array Method recreations. I'm still working through 
   - [indexOf() requirements](./requirements/7-indexOf.md)
 - [x] [Array.prototype.lastIndexOf](./8-lastIndexOf.html)
   - [lastIndexOf() requirements](./requirements/8-lastIndexOf.md)
-- [ ] Array.prototype.includes
+- [x] [Array.prototype.includes](./9-includes.html)
+  - [includes() requirements](./requirements/9-includes.md)
 - [ ] Array.prototype.slice
 - [ ] Array.prototype.join
 - [ ] Array.prototype.push
