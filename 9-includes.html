@@ -7,6 +7,7 @@
       numArray    = [1,2,3],
       zeroArray   = [],
       noValArray  = [,,,,],
+      strArray    = ['one', 'two', 'three'],
       tenArray    = [,3,'test',undefined,6,7,,null,10,true],
       undefinedArray = [undefined, undefined, undefined],
       nullArray   = [null, null, null],
@@ -21,16 +22,129 @@
       ],
       arrLikeObj  = {
         0: 'foo', 
-        5: 'bar', 
+        5: 6, 
         length: 6
       },
-      holyArray   = [1,2,3,,,,7,,];
+      holyArray   = [1,2,3,,,,7,,],
+      trueObject  = {
+        0: 'foo', 
+        5: 'bar'
+      };
 
-  
+  function includes(array, valueToFind, fromIndex) {
+    if (arguments.length === 0) {
+      throw new ReferenceError('No array defined.');
+    }
+
+    if (!(Array.isArray(array) || typeof array === 'string')) {
+      throw new SyntaxError('The first argument must be an array or a string.');
+    }
+
+    var startingIndex = 0; // default case
+
+    if (arguments.length > 2) {
+      startingIndex = fromIndex < 0 ? array.length + fromIndex : fromIndex;
+      // Check if calculated startingIndex > 0
+      startingIndex = startingIndex > 0 ? startingIndex : 0;
+    }
+
+    for (var i = startingIndex; i < array.length; i++) {
+      if (valueToFind === array[i]) {
+        return true;
+      }
+    }
+
+    return false;
+  }
   
   tests({
 
-    
+    '1.  If `valueToFind === array[i]` while traversing array from left to right, return true.': function() {
+      var resultTrue = includes(smArray, 1);
+      eq(resultTrue, true);
+    },
+    '2.  If `valueToFind` is not found, return false.    ': function() {
+      var resultFalse = includes(smArray, 2);
+      eq(resultFalse, false);
+    },
+    '3.  If `array` is not present, throw ReferenceError.': function() {
+      try {
+        includes();
+      } catch(e) {
+        eq(e instanceof ReferenceError, true);
+        eq(e.message, 'No array defined.');
+      }
+    },
+    '4.  If `array` is not an array, throw SyntaxError.': function() {
+      try {
+        includes(42);
+      } catch(e) {
+        eq(e instanceof SyntaxError, true);
+        eq(e.message, 'The first argument must be an array or a string.');
+      }
+    },
+    '5.  If `valueToFind` is not provided, treat as `undefined` value.': function() {
+      var resultTrue = includes(holyArray);
+      var resultFalse = includes(numArray);
+      eq(resultTrue, true);
+      eq(resultFalse, false);
+    },
+    '6.  If `fromIndex` is not provided, default starting index is `0`.': function() {
+      var result = includes(numArray, 1); // because 1 is the 0th element
+      eq(result, true);
+    },
+    '7.  If `fromIndex`, process array starting at `array[fromIndex]`.': function() {
+      var resultFalse = includes(numArray, 1, 1);
+      var resultTrue = includes(numArray, 3, 1);
+      eq(resultTrue, true);
+      eq(resultFalse, false);
+    },
+    '8.  If `fromIndex >= array.length`, return false without searching array.': function() {
+      var result = includes(numArray, 1, 4);
+      eq(result, false);
+    },
+    '9.  If `fromIndex < 0`, process array starting at `array.length + fromIndex`.': function() {
+      var resultFalse = includes(numArray, 1, -1);
+      var resultTrue = includes(numArray, 3, -1);
+      eq(resultFalse, false);
+      eq(resultTrue, true);
+    },
+    '10. If `(fromIndex + array.length) < 0`, process entire array, starting at `array[0]`.': function() {
+      var resultFalse = includes(numArray, 1, -1);
+      var resultTrue = includes(numArray, 3, -10);
+      eq(resultFalse, false);
+      eq(resultTrue, true);
+    },
+    '11. `valueToFind` should be case-sensitive.': function() {
+      var resultTrue = includes(strArray, 'one');
+      var resultFalse = includes(strArray, 'ONE');
+      eq(resultFalse, false);
+      eq(resultTrue, true);
+    },
+    '12. It should work on strings.': function() {
+      var resultTrue = includes('foo', 'f');
+      var resultFalse = includes('bar', 'f');
+      eq(resultFalse, false);
+      eq(resultTrue, true);
+    },
+    '13. It should treat holes as undefined': function() {
+      var resultTrue = includes(noValArray, undefined);
+      var resultTrue2 = includes(noValArray); 
+      eq(resultTrue, true);
+      eq(resultTrue2, true);
+    },
+    '14. It should process all defined standard primitives.': function() {
+      var indexNull = includes(tenArray, null);
+      var indexUndefined = includes(tenArray, undefined);
+      var indexBoolean = includes(tenArray, true)
+      var indexNumber = includes(tenArray, 3);
+      var indexString = includes(tenArray, 'test');
+      eq(indexNull, true);
+      eq(indexUndefined, true);
+      eq(indexBoolean, true);
+      eq(indexNumber, true);
+      eq(indexString, true);
+    },
   
   });
 </script>
