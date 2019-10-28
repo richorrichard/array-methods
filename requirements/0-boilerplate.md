@@ -9,7 +9,7 @@
 ## Requirements:
 <!-- 1. Basic Returns ✓ -->
 
-<!-- 2. Arguement Handling ✓ -->
+<!-- 2. Argument Handling ✓ -->
 
 <!-- 3. Functionality ✓ -->
 
