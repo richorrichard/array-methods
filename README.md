@@ -21,7 +21,10 @@ These are my Watch and Code Array Method recreations. I'm still working through 
   - [lastIndexOf() requirements](./requirements/8-lastIndexOf.md)
 - [x] [Array.prototype.includes](./9-includes.html)
   - [includes() requirements](./requirements/9-includes.md)
-- [ ] Array.prototype.slice
+- [x] [Array.prototype.slice](./10-slice.html)
+  - [includes() requirements](./requirements/10-slice.md)
+  - [function option 1: 22 lines](./10-slice-22.js)
+  - [function option 2: 34 lines](./10-slice-34.js)
 - [ ] Array.prototype.join
 - [ ] Array.prototype.push
 - [ ] Array.prototype.pop
