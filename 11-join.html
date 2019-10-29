@@ -7,7 +7,7 @@
       numArray    = [1,2,3],
       zeroArray   = [],
       noValArray  = [,,,,],
-      tenArray    = [,3,'test',undefined,6,7,,null,10,],
+      tenArray    = [,3,'test',undefined,6,7,,null,10,true],
       undefinedArray = [undefined, undefined, undefined],
       nullArray   = [null, null, null],
       objectArray = [
@@ -28,7 +28,18 @@
   
   tests({
 
-    '': function() {},
+    '- If no `separator`, return a string containing all elements in the array separated by commas.': function() {
+      fail();
+    },
+    '- If `array.length === 0`, return empty string.': function() {
+      fail();
+    },
+    '- If `array.length === 1`, return that element without a separator.': function() {
+      fail();
+    },
+    '- If `separator` is an empty string, return a string containing all elements with no joining characters.': function() {
+      fail();
+    },
     
   });
 </script>

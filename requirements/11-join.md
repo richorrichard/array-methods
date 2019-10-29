@@ -24,9 +24,9 @@ Returns a string  with all elements in array concatenated with commas (default) 
 - If `array` is not an array or an array-like-object, throw SyntaxError "Invalid or unexpected token".
 
 <!-- 3. Functionality ✓ -->
-- If `array[i]` is a `number`, a `boolean`, or `symbol`, it should convert element to a string before being added to return string.
-- If `typeof array[i] === "object"`, object's default return value should be added to return string ([object Object]).
 - If `array[i] === undefined || null`, an empty string should be added to return string.
+- If `array[i]` is any other primitive, it should convert element to a string before being added to return string.
+- If `typeof array[i] === "object"`, object's default return value should be added to return string ([object Object]).
 - It should work with array-like objects.
 
 <!-- 4. Edge Cases ✓ -->
