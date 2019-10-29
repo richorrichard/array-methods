@@ -4,7 +4,7 @@
   "use strict";
 
   var smArray     = [1],
-      numArray    = [1,2,3],
+      numArray    = [1,2,3,4,5,6],
       zeroArray   = [],
       noValArray  = [,,,,],
       tenArray    = [,3,'test',undefined,6,7,,null,10],
@@ -26,11 +26,137 @@
         [7,8,9]
       ];
   
+  function slice(array, begin = 0, end = array.length) {
+    var returnArray     = [],
+        returnIndex     = 0;
+  
+    if (typeof array !== 'object' && array !== null) return returnArray;
+  
+    // Handle Edge Cases
+    if (arguments.length === 0) return returnArray;
+    if (arguments.length < 2 || typeof begin !== 'number') begin = 0;
+    if (arguments.length < 3 || typeof end !== 'number' || end > array.length) end = array.length;
+  
+    // Handle negative values
+    if (begin < 0) begin += array.length;
+    if (end < 0) end += array.length;
+  
+    for (var i = begin; i < end; i++) {
+      returnArray[returnIndex] = array[i];
+      returnIndex++;
+    }
+  
+    return returnArray;
+  }
+
   tests({
 
-    '- It should return a new array with elements from `array[begin]` to `array[end - 1]`.': function() {
-      fail();
+    '1.  It should return a new array composed of elements copied from original array.': function() {
+      var resultArray = slice(numArray);
+      eq(resultArray[0], numArray[0]);
+      eq(resultArray.length, numArray.length);
     },
-    
+    '2.  It should return a new array with extracted elements starting with `array[begin]` up to but not including `array[end]`.': function() {
+      var resultArray = slice(numArray, 3, 5);
+      eq(resultArray[0], 4);
+      eq(resultArray[1], 5);
+    },
+    '3.  If `begin < 0`, extract elements starting with index `begin + array.length`.': function() {
+      var resultArray = slice(numArray, -2);
+      eq(resultArray[0], 5);
+      eq(resultArray[1], 6);
+    },
+    '4.  If `begin > array.length`, return empty array.': function() {
+      var resultArray = slice(numArray, 8);
+      eq(resultArray.length, 0);
+    },
+    '5.  If no `begin`, extract elements starting with `array[0]`.': function() {
+      var resultArray = slice(numArray);
+      eq(resultArray[0], 1);
+    },
+    '6.  If `begin` is not a number, extract elements starting with `array[0]`.': function() {
+      var resultArray = slice(numArray, 'cat');
+      eq(resultArray[0], 1);
+    },
+    '7.  If `end`, extract elements up to but not including `end`.': function() {
+      var resultArray = slice(numArray, 0, 3);
+      eq(resultArray[2], 3);
+      eq(resultArray[3], undefined);
+      eq(resultArray.length, 3);
+    },
+    '8.  If `end < 0`, extract elements up to but not including `array.length + end`.': function() {
+      var resultArray = slice(numArray, 0, -2);
+      eq(resultArray[3], 4);
+      eq(resultArray[4], undefined);
+      eq(resultArray.length, 4);
+    },
+    '9.  If no `end`, extract all remaining elements.': function() {
+      var resultArray = slice(numArray, 2);
+      eq(resultArray[0], 3);
+      eq(resultArray[4], undefined);
+      eq(resultArray.length, 4);
+    },
+    '10. If `end > array.length`, extract all remaining elements.': function() {
+      var resultArray = slice(numArray, 2, 8);
+      eq(resultArray[0], 3);
+      eq(resultArray[4], undefined);
+      eq(resultArray.length, 4);
+    },
+    '11. If `end` is not a number, extract elements until `array.length`.': function() {
+      var resultArray = slice(numArray, 0, 'cat');
+      eq(resultArray[5], 6);
+      eq(resultArray.length, 6);
+    },
+    '12. The original array should not be modified.': function() {
+      var testArray = numArray;
+      slice(testArray);
+      eq(testArray === numArray, true);
+    },
+    '13. If `begin && (end === undefined || \'\')`, extract all remaining elements.': function() {
+      var resultArray1 = slice(numArray, 2, );
+      eq(resultArray1[0], 3);
+      eq(resultArray1[4], undefined);
+      eq(resultArray1.length, 4);
+      
+      var resultArray2 = slice(numArray, 2, undefined);
+      eq(resultArray2[0], 3);
+      eq(resultArray2[4], undefined);
+      eq(resultArray2.length, 4);
+    },
+    '14. If copying object refs, result array and original array should reference same object.': function() {
+      var testObject = {name: 'val1'};
+      var testRefArray = [testObject, 2];
+      var resultArray = slice(testRefArray);
+      testObject.name = 'val2';
+      eq(resultArray[0] === testRefArray[0], true);
+    },
+    '15. It should work on array-like objects.': function() {
+      var resultArray = slice(arrLikeObj, 1);
+      eq(resultArray[4], 'bar');
+      eq(resultArray.length, 5);
+    },
+    '16. It should accept explicitly defined `null` and `undefined` arguments.': function() {
+      var resultArray1 = slice(numArray, null);
+      var resultArray2 = slice(numArray, undefined);
+      var resultArray3 = slice(numArray, 0, null);
+      var resultArray4 = slice(numArray, 0, undefined);
+      eq(resultArray1[0], 1);
+      eq(resultArray2[0], 1);
+      eq(resultArray3[0], 1);
+      eq(resultArray4[0], 1);
+    },
+    '17. If first argument is not an array or object, return `[]`.': function() {
+      var resultArray1 = slice(12);
+      var resultArray2 = slice('ten');
+      var resultArray3 = slice(true);
+      eq(resultArray1.length, 0);
+      eq(resultArray2.length, 0);
+      eq(resultArray3.length, 0);
+    },
+    '18. It should respect holes.': function() {
+      var resultArray = slice(noValArray);
+      eq(resultArray.length, 4);
+    },
+  
   });
 </script>
