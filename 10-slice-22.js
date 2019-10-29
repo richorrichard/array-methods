@@ -12,8 +12,8 @@ Cons:
 */
 
 function slice(array, begin = 0, end = array.length) {
-  var returnArray     = [],
-      returnIndex     = 0;
+  var returnArray = [],
+      returnIndex = 0;
 
   if (typeof array !== 'object' && array !== null) return returnArray;
 
