@@ -3,43 +3,116 @@
   
   "use strict";
 
-  var smArray     = [1],
-      numArray    = [1,2,3],
-      zeroArray   = [],
-      noValArray  = [,,,,],
-      tenArray    = [,3,'test',undefined,6,7,,null,10,true],
+  var smArray = [1],
+      numArray = [1,2,3],
+      zeroArray = [],
+      noValArray = [,,,,],
+      tenArray = [,3,'test',undefined,6,7,,null,10,true],
       undefinedArray = [undefined, undefined, undefined],
-      nullArray   = [null, null, null],
+      nullArray = [null, null, null],
+      primArray = [true, null, undefined, 42, 'string'],
       objectArray = [
         {name: 'Trek', rank: 1},
         {name: 'Specialized', rank: 2},
         {name: 'Santa Cruz', rank: 3}
       ],
-      arrLikeObj  = {
+      arrLikeObj = {
         0: 'foo', 
         5: 'bar', 
         length: 6
       },
-      arrayArray  = [
+      arrayArray = [
         [1,2,3],
         [4,5,6],
         [7,8,9]
       ];
   
+  function join(array, separator) {
+    var returnString = '';
+    
+    // Test that array is an object. Also test that it's not null, because null is an object.
+    if (typeof array !== 'object' && array !== null) {
+      throw new SyntaxError('Invalid or unexpected token.');
+    }
+
+    if (arguments.length < 2) {
+      separator = ',';
+    }
+
+    for (var i = 0; i < array.length; i++) {
+      if (array[i] === null || array[i] === undefined) {
+        returnString += '';
+      } else {
+        returnString += array[i];
+      }
+      
+      if (i < array.length -1) {
+        returnString += separator;
+      }
+    }
+
+    return returnString;
+  }
+
   tests({
 
-    '- If no `separator`, return a string containing all elements in the array separated by commas.': function() {
-      fail();
+    '1.  If no `separator`, return a string containing all elements in the array separated by commas.': function() {
+      var returnString = join(numArray);
+      eq(returnString, '1,2,3');
+      eq(returnString.includes(numArray[0]), true);
+      eq(returnString.includes(numArray[1]), true);
+      eq(returnString.includes(numArray[2]), true);
     },
-    '- If `array.length === 0`, return empty string.': function() {
-      fail();
+    '2.  If `array.length === 0`, return empty string.': function() {
+      var returnString = join(zeroArray);
+      eq(returnString, '');
     },
-    '- If `array.length === 1`, return that element without a separator.': function() {
-      fail();
+    '3.  If `array.length === 1`, return that element without a separator.': function() {
+      var returnString = join(smArray);
+      eq(returnString, '1');
     },
-    '- If `separator` is an empty string, return a string containing all elements with no joining characters.': function() {
-      fail();
+    '4.  If `separator`, return string joined with `separator`.': function() {
+      var returnString = join(numArray, '&');
+      eq(returnString, '1&2&3');
     },
-    
+    '5.  If `separator` is an empty string, return a string containing all elements with no joining characters.': function() {
+      var returnString = join(numArray, '');
+      eq(returnString, '123');
+    },
+    '6.  If `separator` is not a string, convert to a string.': function() {
+      var returnStringNum = join(numArray, 42);
+      var returnStringBool = join(numArray, false);
+      eq(returnStringNum, '1422423');
+      eq(returnStringBool, '1false2false3');
+    },
+    '7.  If `array` is not an array or an array-like-object, throw SyntaxError "Invalid or unexpected token.".': function() {
+      try {
+        join(true);
+      } catch(e) {
+        eq(e.message, 'Invalid or unexpected token.');
+      }
+    },
+    '8.  If `array[i] === undefined || null`, an empty string should be added to return string.': function() {
+      var arrNullUndef = [undefined, null];
+      var returnString = join(arrNullUndef);
+      eq(returnString, ',');
+    },
+    '9.  If `array[i]` is any other primitive, it should convert element to a string before being added to return string.': function() {
+      var returnString = join(primArray);
+      eq(returnString, 'true,,,42,string');
+    },
+    '10. If `typeof array[i] === "object"`, object\'s default return value should be added to return string ([object Object]).': function() {
+      var returnString = join(objectArray);
+      eq(returnString, '[object Object],[object Object],[object Object]');
+    },
+    '11. It should work with array-like objects.': function() {
+      var returnString = join(arrLikeObj);
+      eq(returnString, 'foo,,,,,bar');
+    },
+    '12. It should respect holes': function() {
+      var returnString = join(noValArray);
+      eq(returnString, ',,,');
+    },
+
   });
 </script>
