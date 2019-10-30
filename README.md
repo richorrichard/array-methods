@@ -29,8 +29,10 @@ These are my Watch and Code Array Method recreations. I'm still working through 
   - [join() requirements](./requirements/11-join.md)
 - [x] [Array.prototype.push](./12-push.html)
   - [push() requirements](./requirements/12-push.md)
-- [ ] Array.prototype.pop
-- [ ] Array.prototype.shift
+- [x] [Array.prototype.pop](./13-pop.html)
+  - [pop() requirements](./requirements/13-pop.md)
+- [x] [Array.prototype.shift](./14-shift.html)
+  - [shift() requirements](./requirements/14-shift.md)
 - [ ] Array.prototype.unshift
 - [ ] Array.prototype.fill
 - [ ] Array.prototype.reverse
