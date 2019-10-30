@@ -16,21 +16,92 @@
       {name: 'Specialized', rank: 2},
       {name: 'Santa Cruz', rank: 3}
     ],
-    arrLikeObj = {
-      0: 'foo', 
-      5: 'bar', 
-      length: 6
-    },
+    arrLikeObj = {0: 'foo', 5: 'bar', length: 6},
     arrayArray = [
       [1,2,3],
       [4,5,6],
       [7,8,9]
     ];
 
-  
+  function pop(array) {
+    if (typeof array !== 'object' || array === null) {
+      throw new TypeError('You must pass an array or object into this function');
+    }
+    
+    var popIndex = array.length-1;
+    var returnElement = array[popIndex];
+    
+    if (Array.isArray(array)) {
+      // Use splice because it removes index in Arrays
+      array.splice(popIndex);
+    } else if (array.length) {
+      // Use delete for non-arrays 
+      delete array[popIndex];
+      array.length--;
+    } else {
+      array.length = 0;
+    }
+
+    return returnElement;
+  }
+
   tests({
 
-    '': function() {},
+    '1. If `array.length > 0`, return `array[array.length-1]`.': function() {
+      var demoArray = [1,2,3];
+      var resultElement = pop(demoArray);
+      eq(resultElement, 3);
+    },
+    '2. If `array.length === 0`, return `undefined`.': function() {
+      var resultElement = pop([]);
+      eq(resultElement, undefined);
+    },
+    '3. It should remove `array[array.length - 1]` from array.': function() {
+      var demoArray = [1,2,3];
+      pop(demoArray);
+      eq(demoArray[2], undefined);
+    },
+    '4. Resulting array length should be `array.length - 1`.': function() {
+      var demoArray = [1,2,3];
+      pop(demoArray);
+      eq(demoArray.length, 2);
+    },
+    '5. If `array[i]` is `undefined` or a hole, return explicit `undefined`.': function() {
+      var demoArray1 = [1,2,3,undefined];
+      var demoArray2 = [1,2,3,,];
+      var demoReturn1 = pop(demoArray1);
+      var demoReturn2 = pop(demoArray2);
+      eq(demoReturn1, undefined);
+      eq(demoReturn2, undefined);
+    },
+    '6. If `typeof array !== \'object\'`, throw TypeError': function() {
+      try {pop(true);} catch(e) {eq(e.name, 'TypeError');}
+      try {pop(null);} catch(e) {eq(e.name, 'TypeError');}
+      try {pop(undefined);} catch(e) {eq(e.name, 'TypeError');}
+      try {pop(42);} catch(e) {eq(e.name, 'TypeError');}
+      try {pop('foo');} catch(e) {eq(e.name, 'TypeError');}
+    },
+    '7. If `typeof array === \'object\'`, and is an array-like-object, it should work.': function() {
+      var demoArrLikeObj = {0: 'foo', 2: 'bar', length: 3};
+      var returnElement = pop(demoArrLikeObj);
+      eq(returnElement, 'bar');
+      eq(demoArrLikeObj[1], undefined);
+      eq(demoArrLikeObj.length, 2);
+    },
+    '8. If `typeof array === \'object\'`, and is not array-like-object, `array.length` should be set to `0`.': function() {
+      var obj = {name: 'foo', job: 'bar'};
+      var returnElement = pop(obj);
+      eq(obj.length, 0);
+      eq(obj[0], undefined);
+      eq(returnElement, undefined);
+    },
+    '9. It should process `array[i]` of any data type.': function() {
+      eq(pop([true]), true);
+      eq(pop([null]), null);
+      eq(pop([undefined]), undefined);
+      eq(pop([42]), 42);
+      eq(pop(['foo']), 'foo');
+    },
     
   });
 </script>
