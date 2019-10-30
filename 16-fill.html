@@ -27,50 +27,142 @@
       [7,8,9]
     ];
 
-  function fill() {
+  function fill(array, value, start, end) {
     
+    if (typeof array !== 'object' || array === null) {
+      throw new TypeError('You must pass an array or object into this function');
+    }
+
+    if (array.length === 0) {
+      return array;
+    }
+
+    if (arguments.length < 3) {
+      start = 0;
+    }
+
+    if (arguments.length < 4) {
+      end = array.length;
+    }
+
+    if (start < 0) {
+      start += array.length;
+    }
+
+    if (end < 0) {
+      end += array.length;
+    }
+
+    for (var i = start; i < end; i++) {
+      array[i] = value;
+    }
+
+    return array;
   }
   
   tests({
 
-    '- It should return the modified original array (not a copy).': function() {
-      fail();
+    '1.  It should return the modified original array (not a copy).': function() {
+      var array = [1];
+      var resultArray = fill(array);
+      eq(resultArray, array); 
     },
-    '- It should replace all elements in range with `value`.': function() {
-      fail();
+    '2.  It should replace all elements in range with `value`.': function() {
+      var array = [1];
+      var resultArray = fill(array, 'foo');
+      eq(resultArray[0], 'foo');
     },
-    '- If no `start`, fill beginning with `start = 0`.': function() {
-      fail();
+    '3.  If no `start`, fill beginning with `start = 0`.': function() {
+      var array = [1, 2, 3];
+      var resultArray = fill(array, 'foo');
+      eq(resultArray[0], 'foo');
     },
-    '- If `start < 0`, fill beginning with `start = array.length + start`.': function() {
-      fail();
+    '4.  If `start > 0`, fill beginning with `start`.': function() {
+      var array = [1,2,3];
+      var resultArray = fill(array, 'foo', 1);
+      eq(resultArray[0], 1);
+      eq(resultArray[1], 'foo');
+      eq(resultArray[2], 'foo');
     },
-    '- If no `end`, fill up to but not including `end = array.length`.': function() {
-      fail();
+    '5.  If `start < 0`, fill beginning with `start = array.length + start`.': function() {
+      var array = [1,2,3];
+      var resultArray = fill(array, 'foo', -1);
+      eq(resultArray[0], 1);
+      eq(resultArray[1], 2);
+      eq(resultArray[2], 'foo');
     },
-    '- If `end < 0`, fill up to but not including `end = array.length + end`.': function() {
-      fail();
+    '6.  If no `end`, fill up to but not including `end = array.length`.': function() {
+      var array = [1,2,3];
+      var resultArray = fill(array, 'foo');
+      eq(resultArray[0], 'foo');
+      eq(resultArray[1], 'foo');
+      eq(resultArray[2], 'foo');
     },
-    '- It should work with array-like objects.': function() {
-      fail();
+    '7.  If `end > 0`, fill up to but not including `end`.': function() {
+      var array = [1,2,3];
+      var resultArray = fill(array, 'foo', 0, 2);
+      eq(resultArray[0], 'foo');
+      eq(resultArray[1], 'foo');
+      eq(resultArray[2], 3);
     },
-    '- If passed an object, it will fill specified elements with references to that object.': function() {
-      fail();
+    '8.  If `end < 0`, fill up to but not including `end = array.length + end`.': function() {
+      var array = [1,2,3];
+      var resultArray = fill(array, 'foo', 0, -1);
+      eq(resultArray[0], 'foo');
+      eq(resultArray[1], 'foo');
+      eq(resultArray[2], 3);
     },
-    '- It should fill with all data types.': function() {
-      fail();
+    '9.  It should work with array-like objects.': function() {
+      var array = {0:'one', 1:'two', 2:'three', length: 3};
+      var resultArray = fill(array, 'foo');
+      eq(resultArray[0], 'foo');
+      eq(resultArray[1], 'foo');
+      eq(resultArray[2], 'foo');
     },
-    '- If a non-object is passed into the function it should throw TypeError.': function() {
-      fail();
+    '10. If passed an object, it will fill specified elements with references to that object.': function() {
+      var array = [1,2,3];
+      var obj = {0:'one', 1:'two', 2:'three', length: 3};
+      var resultArray = fill(array, obj);
+      eq(resultArray[0], obj);
+      eq(resultArray[1], obj);
+      eq(resultArray[2], obj);
     },
-    '- It should fill holes.': function() {
-      fail();
+    '11. It should fill with all data types.': function() {
+      var obj = {foo:'bar'};
+      var result = fill([1], true);
+      eq(result[0], true);
+      var result = fill([1], null);
+      eq(result[0], null);
+      var result = fill([1], undefined);
+      eq(result[0], undefined);
+      var result = fill([1], 42);
+      eq(result[0], 42);
+      var result = fill([1], 'foo');
+      eq(result[0], 'foo');
+      var result = fill([1], obj);
+      eq(result[0], obj);
     },
-    '- If passed an object with no `length` property, immediately return original unaltered array.': function() {
-      fail();
+    '12. If a non-object is passed into the function it should throw TypeError.': function() {
+      try {fill(null, 1);} catch(e) {eq(e.name, 'TypeError');};
+      try {fill(undefined, 1);} catch(e) {eq(e.name, 'TypeError');};
+      try {fill(true, 1);} catch(e) {eq(e.name, 'TypeError');};
+      try {fill(42, 1);} catch(e) {eq(e.name, 'TypeError');};
+      try {fill('array', 1);} catch(e) {eq(e.name, 'TypeError');};
     },
-    '- If `array.length === 0`, it should immediately return original unaltered array.': function() {
-      fail();
+    '13. It should fill holes.': function() {
+      var array = [1,,3];
+      var resultArray = fill(array, 'foo');
+      eq(resultArray[1], 'foo');
+    },
+    '14. If passed an object with no `length` property, immediately return original unaltered array.': function() {
+      var array = {0:'one', 1:'two', 2:'three'};
+      var resultArray = fill(array, 'foo');
+      eq(resultArray, array);
+    },
+    '15. If `array.length === 0`, it should immediately return original unaltered array.': function() {
+      var array = [];
+      var resultArray = fill(array, 'foo');
+      eq(resultArray, array);
     },
     
   });
