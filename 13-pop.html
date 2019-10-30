@@ -32,10 +32,9 @@
     var returnElement = array[popIndex];
     
     if (Array.isArray(array)) {
-      // Use splice because it removes index in Arrays
       array.splice(popIndex);
     } else if (array.length) {
-      // Use delete for non-arrays 
+      // Use `delete` for array-like-objects 
       delete array[popIndex];
       array.length--;
     } else {
