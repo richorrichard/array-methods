@@ -27,38 +27,81 @@
       [7,8,9]
     ];
   
-  function unshift() {
+  function unshift(array) {
+    var shiftCount = arguments.length-1;
 
+    if (arguments.length > 1) {
+      // shift array
+      for (var i = array.length-1; i >= 0; i--) {
+        array[i + shiftCount] = array[i];
+      }
+      // insert values
+      for (var i = 1; i < arguments.length; i++) {
+        array[i - 1] = arguments[i];
+
+        if (!array.length) {
+          array.length = 0;
+        }
+        
+        if (!Array.isArray(array)) {
+          array.length++;
+        } 
+      }
+    }
+    
+    return array.length;
   }
   
   tests({
 
-    '- It should return the length of the array upon which it was called': function() {
-      fail();
+    '1. It should return the length of the array upon which it was called': function() {
+      var resultLength = unshift(numArray);
+      eq(resultLength, 3);
     },
-    '- It should insert `elementN` to the beginning of array upon which it was called.': function() {
-      fail();
+    '2. It should insert `elementN` to the beginning of array upon which it was called.': function() {
+      var numArray = [2,3,4];
+      var resultLength = unshift(numArray, 1);
+      eq(resultLength, 4);
+      eq(numArray[0], 1);
     },
-    '- If multiple `element`s are passed in, it should insert all new elements in order.': function() {
-      fail();
+    '3. If multiple `element`s are passed in, it should insert all new elements in order.': function() {
+      var numArray = [4,5,6];
+      var resultLength = unshift(numArray, 1, 2, 3);
+      eq(resultLength, 6);
+      eq(numArray[0], 1);
+      eq(numArray[1], 2);
+      eq(numArray[2], 3);
     },
-    '- If no `element`, do not modify array.': function() {
-      fail();
+    '4. If no `element`, do not modify array.': function() {
+      var numArray = [1,2,3];
+      var resultLength = unshift(numArray);
+      eq(resultLength, 3);
+      eq(numArray[0], 1);
+      eq(numArray[1], 2);
+      eq(numArray[2], 3);
     },
-    '- It should shift the indexes of all elements in array forward by `arguments.length - 1`.': function() {
-      fail();
+    '5. It should work on objects with a `length` property.': function() {
+      var arrLikeObj = {0:'one', 1:'two', 2:'three', length: 3};
+      var resultLength = unshift(arrLikeObj, 'new');
+      eq(resultLength, 4);
+      eq(arrLikeObj[0], 'new');
+      eq(arrLikeObj[1], 'one');
+      eq(arrLikeObj[2], 'two');
+      eq(arrLikeObj[3], 'three');
     },
-    '- It should work on objects with a `length` property.': function() {
-      fail();
+    '6. If `array` is a non-array-like object, it should add length property and insert `element`s.': function() {
+      var obj = {one:'one', two:'two', three:'three'};
+      var resultLength = unshift(obj, 'new');
+      eq(resultLength, 1);
+      eq(obj[0], 'new');
+      eq(obj[1], undefined);
     },
-    '- If `array` is a non-array-like object, it should add length property and insert `element`s.': function() {
-      fail();
-    },
-    '- If `element` is an array or object, it should insert the object.': function() {
-      fail();
-    },
-    '- If `element` is an array or object, is should not recurse into the object.': function() {
-      fail();
+    '7. If `element` is an object, it should insert the object.': function() {
+      var obj = {1:'one'};
+      var array = [1,2,3];
+      var resultLength = unshift(array, obj);
+      eq(resultLength, 4);
+      eq(array[0], obj);
     },
     
   });
