@@ -1,0 +1,121 @@
+<script src="./simpletest.js"></script>
+<script>
+  
+  "use strict";
+
+  var smArray = [1],
+    numArray = [1,2,3],
+    zeroArray = [],
+    noValArray = [,,,,],
+    tenArray = [,3,'test',undefined,6,7,,null,10,true],
+    undefinedArray = [undefined, undefined, undefined],
+    nullArray = [null, null, null],
+    primArray = [true, null, undefined, 42, 'string'],
+    objectArray = [
+      {name: 'Trek', rank: 1},
+      {name: 'Specialized', rank: 2},
+      {name: 'Santa Cruz', rank: 3}
+    ],
+    arrLikeObj = {
+      0: 'foo', 
+      5: 'bar', 
+      length: 6
+    },
+    arrayArray = [
+      [1,2,3],
+      [4,5,6],
+      [7,8,9]
+    ];
+
+  function shift(array) {
+    if (typeof array !== 'object' || array === null) {
+      throw new TypeError('You must pass an array or object into this function');
+    }
+    
+    var returnElement = array[0];
+    var lastElementIndex = array.length-1;
+
+    for (var i = 0; i < array.length; i++) {
+      array[i] = array[i+1];
+    }
+
+    if (Array.isArray(array)) {
+      array.splice(lastElementIndex, 1);
+    } else if (array.length) {
+      // Use `delete` for array-like-objects 
+      delete array[lastElementIndex];
+      array.length--;
+    } else {
+      array.length = 0;
+    }
+
+    return returnElement;
+  }
+    
+
+  tests({
+
+    '1.  If `array.length > 0`, return `array[0]`.': function() {
+      var demoArray = [1,2,3];
+      var resultElement = shift(demoArray);
+      eq(resultElement, 1);
+    },
+    '2.  If `array.length === 0`, return `undefined`.': function() {
+      var resultElement = shift([]);
+      eq(resultElement, undefined);
+    },
+    '3.  It should remove `array[0]` from array.': function() {
+      var demoArray = [1,2,3];
+      shift(demoArray);
+      eq(demoArray[0], 2);
+    },
+    '4.  It should shift the values of all indexes down `1` index.': function() {
+      var demoArray = [1,2,3];
+      shift(demoArray);
+      eq(demoArray[0], 2);
+      eq(demoArray[1], 3);
+    },
+    '5.  Resulting array length should be `array.length - 1`.': function() {
+      var demoArray = [1,2,3];
+      shift(demoArray);
+      eq(demoArray.length, 2);
+    },
+    '6.  If `array[i]` is `undefined` or a hole, return explicit `undefined`.': function() {
+      var demoArray1 = [undefined,1,2,3];
+      var demoArray2 = [,1,2,3];
+      var demoReturn1 = shift(demoArray1);
+      var demoReturn2 = shift(demoArray2);
+      eq(demoReturn1, undefined);
+      eq(demoReturn2, undefined);
+    },
+    '7.  If `typeof array !== \'object\'`, throw TypeError.': function() {
+      try {shift(true);} catch(e) {eq(e.name, 'TypeError');}
+      try {shift(null);} catch(e) {eq(e.name, 'TypeError');}
+      try {shift(undefined);} catch(e) {eq(e.name, 'TypeError');}
+      try {shift(42);} catch(e) {eq(e.name, 'TypeError');}
+      try {shift('foo');} catch(e) {eq(e.name, 'TypeError');}
+    },
+    '8.  If `typeof array === \'object\'`, and is an array-like-object, it should work.': function() {
+      var demoArrLikeObj = {0: 'foo', 2: 'bar', length: 3};
+      var returnElement = shift(demoArrLikeObj);
+      eq(returnElement, 'foo');
+      eq(demoArrLikeObj[1], 'bar');
+      eq(demoArrLikeObj.length, 2);
+    },
+    '9.  If `typeof array === \'object\'`, and is not array-like-object, `array.length` should be set to `0`.': function() {
+      var obj = {name: 'foo', job: 'bar'};
+      var returnElement = shift(obj);
+      eq(obj.length, 0);
+      eq(obj[0], undefined);
+      eq(returnElement, undefined);
+    },
+    '10. It should process `array[i]` of any data type.': function() {
+      eq(shift([true]), true);
+      eq(shift([null]), null);
+      eq(shift([undefined]), undefined);
+      eq(shift([42]), 42);
+      eq(shift(['foo']), 'foo');
+    },
+    
+  });
+</script>
