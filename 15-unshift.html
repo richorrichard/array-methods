@@ -1,0 +1,65 @@
+<script src="./simpletest.js"></script>
+<script>
+  
+  "use strict";
+
+  var smArray = [1],
+    numArray = [1,2,3],
+    zeroArray = [],
+    noValArray = [,,,,],
+    tenArray = [,3,'test',undefined,6,7,,null,10,true],
+    undefinedArray = [undefined, undefined, undefined],
+    nullArray = [null, null, null],
+    primArray = [true, null, undefined, 42, 'string'],
+    objectArray = [
+      {name: 'Trek', rank: 1},
+      {name: 'Specialized', rank: 2},
+      {name: 'Santa Cruz', rank: 3}
+    ],
+    arrLikeObj = {
+      0: 'foo', 
+      5: 'bar', 
+      length: 6
+    },
+    arrayArray = [
+      [1,2,3],
+      [4,5,6],
+      [7,8,9]
+    ];
+  
+  function unshift() {
+
+  }
+  
+  tests({
+
+    '- It should return the length of the array upon which it was called': function() {
+      fail();
+    },
+    '- It should insert `elementN` to the beginning of array upon which it was called.': function() {
+      fail();
+    },
+    '- If multiple `element`s are passed in, it should insert all new elements in order.': function() {
+      fail();
+    },
+    '- If no `element`, do not modify array.': function() {
+      fail();
+    },
+    '- It should shift the indexes of all elements in array forward by `arguments.length - 1`.': function() {
+      fail();
+    },
+    '- It should work on objects with a `length` property.': function() {
+      fail();
+    },
+    '- If `array` is a non-array-like object, it should add length property and insert `element`s.': function() {
+      fail();
+    },
+    '- If `element` is an array or object, it should insert the object.': function() {
+      fail();
+    },
+    '- If `element` is an array or object, is should not recurse into the object.': function() {
+      fail();
+    },
+    
+  });
+</script>
