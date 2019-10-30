@@ -28,6 +28,10 @@
     ];
   
   function unshift(array) {
+    if (typeof array !== 'object' || array === null) {
+      throw new TypeError('You must pass an array or object into this function');
+    }
+    
     var shiftCount = arguments.length-1;
 
     if (arguments.length > 1) {
@@ -102,6 +106,13 @@
       var resultLength = unshift(array, obj);
       eq(resultLength, 4);
       eq(array[0], obj);
+    },
+    '7.  If `typeof array !== \'object\'`, throw TypeError.': function() {
+      try {unshift(true);} catch(e) {eq(e.name, 'TypeError');}
+      try {unshift(null);} catch(e) {eq(e.name, 'TypeError');}
+      try {unshift(undefined);} catch(e) {eq(e.name, 'TypeError');}
+      try {unshift(42);} catch(e) {eq(e.name, 'TypeError');}
+      try {unshift('foo');} catch(e) {eq(e.name, 'TypeError');}
     },
     
   });
