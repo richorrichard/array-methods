@@ -1,0 +1,77 @@
+<script src="./simpletest.js"></script>
+<script>
+  
+  "use strict";
+
+  var smArray = [1],
+    numArray = [1,2,3],
+    zeroArray = [],
+    noValArray = [,,,,],
+    tenArray = [,3,'test',undefined,6,7,,null,10,true],
+    undefinedArray = [undefined, undefined, undefined],
+    nullArray = [null, null, null],
+    primArray = [true, null, undefined, 42, 'string'],
+    objectArray = [
+      {name: 'Trek', rank: 1},
+      {name: 'Specialized', rank: 2},
+      {name: 'Santa Cruz', rank: 3}
+    ],
+    arrLikeObj = {
+      0: 'foo', 
+      5: 'bar', 
+      length: 6
+    },
+    arrayArray = [
+      [1,2,3],
+      [4,5,6],
+      [7,8,9]
+    ];
+
+  function fill() {
+    
+  }
+  
+  tests({
+
+    '- It should return the modified original array (not a copy).': function() {
+      fail();
+    },
+    '- It should replace all elements in range with `value`.': function() {
+      fail();
+    },
+    '- If no `start`, fill beginning with `start = 0`.': function() {
+      fail();
+    },
+    '- If `start < 0`, fill beginning with `start = array.length + start`.': function() {
+      fail();
+    },
+    '- If no `end`, fill up to but not including `end = array.length`.': function() {
+      fail();
+    },
+    '- If `end < 0`, fill up to but not including `end = array.length + end`.': function() {
+      fail();
+    },
+    '- It should work with array-like objects.': function() {
+      fail();
+    },
+    '- If passed an object, it will fill specified elements with references to that object.': function() {
+      fail();
+    },
+    '- It should fill with all data types.': function() {
+      fail();
+    },
+    '- If a non-object is passed into the function it should throw TypeError.': function() {
+      fail();
+    },
+    '- It should fill holes.': function() {
+      fail();
+    },
+    '- If passed an object with no `length` property, immediately return original unaltered array.': function() {
+      fail();
+    },
+    '- If `array.length === 0`, it should immediately return original unaltered array.': function() {
+      fail();
+    },
+    
+  });
+</script>
