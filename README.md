@@ -27,7 +27,8 @@ These are my Watch and Code Array Method recreations. I'm still working through 
   - [function option 2: 34 lines](./10-slice-34.js)
 - [x] [Array.prototype.join](./11-join.html)
   - [join() requirements](./requirements/11-join.md)
-- [ ] Array.prototype.push
+- [x] [Array.prototype.push](./12-push.html)
+  - [push() requirements](./requirements/12-push.md)
 - [ ] Array.prototype.pop
 - [ ] Array.prototype.shift
 - [ ] Array.prototype.unshift
