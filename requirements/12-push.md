@@ -13,20 +13,20 @@ It returns the length property of the object upon which it was called.
 
 ## Requirements:
 <!-- 1. Basic Returns ✓ -->
-- It should return the length of the object upon which it was called.
+1. ✓ It should return the length of the object upon which it was called.
 
 <!-- 2. Argument Handling ✓ -->
-- If no `element`, It should not modify the original array.
+2. ✓ If no `element`, It should not modify the original array.
 
 <!-- 3. Functionality ✓ -->
-- It should append each `element` to the end of the object.
-- It should begin appending elements at `array[array.length]`.
-- It should increase the array's length by `arguments.length - 1`.
-- It should work on objects resembling arrays.
-- If `argument` is an array, append array items.
-- If `argument[i]` is an array, it should not recurse into child array.
-- If array has no length (e.g. object), it should begin appending elements at 0.
-- If `typeof array !== object`, throw SyntaxError "Invalid or unexpected token".
+3. ✓ If `arguments.length > 1`, it should append each `element` to the end of array.
+4. ✓ It should begin appending elements at `array[array.length]`.
+5. ✓ It should work with many `element` arguments.
+6. ✓ It should increase the array's length by `arguments.length - 1`.
+7. ✓ It should work on objects resembling arrays.
+8. ✓ If `argument` is an array, append the array.
+9. ✓ If array has no length (e.g. object), it should begin appending elements at 0.
+10. ✓ If `typeof array !== object`, throw SyntaxError "Invalid or unexpected token".
 
 <!-- 4. Edge Cases ✓ -->
 

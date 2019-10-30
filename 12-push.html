@@ -27,10 +27,95 @@
       [7,8,9]
     ];
 
+  function push(array) {
+    // array should be an object. check for null because typeof null is object too
+    if (typeof array !== 'object' && array !== 'null') {
+      throw new SyntaxError('Invalid or unexpected token');
+    }
+    // If array is object without length property, set a length property. required.
+    if (array.length === undefined) {
+      array.length = 0;
+    }
+    
+    var resultIndex = array.length;
+
+    if (arguments.length > 1) {
+      for (var i = 1; i < arguments.length; i++) {
+        array[resultIndex] = arguments[i];
+        resultIndex++;
+
+        if (typeof array === 'object' && !Array.isArray(array)) {
+          array.length++;
+        }
+      }
+    }
+    return array.length;
+  }
   
   tests({
 
-    '': function() {},
+    '1.  It should return the length of the object upon which it was called.': function() {
+      var resultLength = push(smArray);
+      eq(resultLength, 1);
+    },
+    '2.  If no `element`, It should not modify the original array.': function() {
+      var arrLength = smArray.length;
+      var resultLength = push(smArray);
+      eq(resultLength, arrLength);
+    },
+    '3.  It should begin appending elements at `array[array.length]`.': function() {
+      var array = [1,2,3];
+      var resultLength = push(array, 1);
+      eq(array[3], 1);
+    },
+    '4.  It should work with many `element` arguments.': function() {
+      var array = [1];
+      var resultLength = push(array, 2, 3, 4, 5, 6);
+      eq(resultLength, 6);
+      eq(array[5], 6);
+    },
+    '5.  If `arguments.length > 1`, it should append each `element` to the end of array.': function() {
+      var array = [1,2,3];
+      var resultLength = push(array, 1);
+      eq(resultLength, 4);
+      eq(array[3], 1);
+    },
+    '6.  It should increase the array\'s length by `arguments.length - 1`.': function() {
+      var array = [1,2,3];
+      var resultLength = push(array, 1);
+      eq(resultLength, 4);
+    },
+    '7.  It should work on objects resembling arrays.': function() {
+      var arrLikeCopy = {
+        0: 'foo', 
+        5: 'bar', 
+        length: 6
+      };
+      var resultLength = push(arrLikeCopy, 1);
+      eq(resultLength, 7);
+    },
+    '8.  If `argument` is an array, append the array': function() {
+      var arr1 = [1, 2];
+      var arr2 = [3, 4];
+      var resultLength = push(arr1, arr2);
+      eq(resultLength, 3);
+      eq(arr1[2][0], 3);
+    },
+    '9.  If array has no length (e.g. object), it should begin appending elements at 0.': function() {
+      var obj = {name: 'foo', desc: 'bar'};
+      var resultLength = push(obj, 42);
+      eq(resultLength, 1);
+      eq(obj[0], 42);
+      push(numArray, tenArray);
+    },
+    '10. If `typeof array !== object`, throw SyntaxError "Invalid or unexpected token".': function() {
+      try {
+        push(true, 1);
+      } catch(e) {
+        eq(e.message, 'Invalid or unexpected token');
+        eq(e.name, 'SyntaxError');
+      }
+    },
     
   });
 </script>
