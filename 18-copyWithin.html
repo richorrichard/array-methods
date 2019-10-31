@@ -3,68 +3,219 @@
   
   "use strict";
 
-  function copyWithin() {
+  function copyWithin(array, target, start, end) {
+    if (!array) {
+      throw new ReferenceError;
+    }
+
+    if (typeof array !== 'object' || array === null) {
+      throw new TypeError;
+    }
+
+    if (typeof array === 'object' && !array.length) {
+      return array;
+    }
+
+    var arrLength = array.length;
+    var copiedRange = [];
+    var copyIndex = 0;
+
+    if (arguments.length < 2) {
+      target = 0;
+    }
+
+    if (arguments.length < 3) {
+      start = 0;
+    }
+
+    if (arguments.length < 4) {
+      end = arrLength;
+    }
     
+    if (target > arrLength) {
+      return array;
+    }
+    
+    if (start > arrLength) {
+      return array;
+    }
+    
+    if (target < 0) {
+      target += arrLength;
+    }
+    
+    if (start < 0) {
+      start += arrLength;
+    }
+
+    if (end < 0) {
+      end += arrLength;
+    }
+
+    if (end > arrLength) {
+      end = arrLength;
+    }
+    
+
+    // get copied range
+    for (var i = start; i < end; i++) {
+      if(array[i]) {
+        copiedRange[copyIndex] = array[i];
+      }
+      copyIndex++;
+    }
+
+    var copyEndIndex = target + copiedRange.length;
+    copyIndex = 0;
+
+    // put copied range
+    for (var j = target; j < copyEndIndex; j++) {
+      if (copiedRange[copyIndex]) {
+        array[j] = copiedRange[copyIndex];
+      } else {
+        delete array[j];
+      }
+
+      // If copied range is shorter than 
+      copyIndex++;
+    }
+
+    return array;
   }
   
   tests({
 
-    '- It should return the original array, not a copy.': function() {
-      fail();
+    '1.  It should return the original array, not a copy.': function() {
+      var array = [1,2,3];
+      var resultArray = copyWithin(array);
+      eq(resultArray, array);
     },
-    '- If no `array` it should throw a ReferenceError': function() {
-      fail();
+    '2.  If no `array` it should throw a ReferenceError': function() {
+      try {
+        copyWithin();
+      } catch(e) {
+        eq(e.name, 'ReferenceError');
+      }
     },
-    '- If no `target`, it should immediately return the original unmodified array.': function() {
-      fail();
+    '3.  It should not change the array\'s length': function() {
+      var array = [1,2,3];
+      var resultArray = copyWithin(array);
+      eq(resultArray.length, array.length);
     },
-    '- If `target > 0`, it should fill with elements in range starting at `array[target]`.': function() {
-      fail();
+    '4.  If no `target`, it should immediately return the original unmodified array.': function() {
+      var array = [1,2,3];
+      var resultArray = copyWithin(array);
+      eq(resultArray, array);
     },
-    '- If `target > array.length`, It should not modify the array.': function() {
-      fail();
+    '5.  If `target > 0`, it should fill with copied elements in range starting at `array[target]`.': function() {
+      var array = [1,2,3];
+      var resultArray = copyWithin(array, 1);
+      eq(resultArray[0], 1);
+      eq(resultArray[1], 1);
+      eq(resultArray[2], 2);
     },
-    '- If `target < 0`, it should fill with elements in range starting at `array.length + target`.': function() {
-      fail();
+    '6.  If `target > array.length`, it should immediately return the original array.': function() {
+      var array = [1,2,3];
+      var resultArray = copyWithin(array, 5);
+      eq(resultArray[0], 1);
+      eq(resultArray[1], 2);
+      eq(resultArray[2], 3);
+      eq(resultArray.length, array.length);
     },
-    '- If no `start`, `start = 0`.': function() {
-      fail();
+    '7.  If `target < 0`, it should fill with elements in range starting at `array.length + target`.': function() {
+      var array = [1,2,3];
+      var resultArray = copyWithin(array, -2);
+      eq(resultArray[0], 1);
+      eq(resultArray[1], 1);
+      eq(resultArray[2], 2);
     },
-    '- If `start > 0`, it should copying elements starting with `array[start]`.': function() {
-      fail();
+    '8.  If no `start`, `start = 0`.': function() {
+      var array = [1,2,3];
+      var resultArray = copyWithin(array, 1);
+      eq(resultArray[0], 1);
+      eq(resultArray[1], 1);
+      eq(resultArray[2], 2);
     },
-    '- If `start > array.length`, it should not modify the array.': function() {
-      fail();
+    '9.  If `start > 0`, it should copying elements starting with `array[start]`.': function() {
+      var array = [1,2,3];
+      var resultArray = copyWithin(array, 1, 2);
+      eq(resultArray[1], 3);
     },
-    '- If `start < 0`, it should start copying from `array[array.length + start]`.': function() {
-      fail();
+    '10. It should only process `copiedRange.length` elements.': function() {
+      var array = [1,2,3,4,5];
+      var resultArray = copyWithin(array, 1, 3);
+      eq(resultArray[2], 5);
+      eq(resultArray[3], 4);
     },
-    '- If no `end`, `end = array.length`.': function() {
-      fail();
+    '11. If `start > array.length`, it should immediately return the original array.': function() {
+      var array = [1,2,3];
+      var resultArray = copyWithin(array, 1, 4);
+      eq(resultArray[0], 1);
+      eq(resultArray[1], 2);
+      eq(resultArray[2], 3);
+      eq(resultArray.length, array.length);
     },
-    '- If `end > 0`, it should copy up to, but not including `array[end]`.': function() {
-      fail();
+    '12. If `start < 0`, it should start copying from `array[array.length + start]`.': function() {
+      var array = [1,2,3];
+      var resultArray = copyWithin(array, 1, -1);
+      eq(resultArray[1], 3);
     },
-    '- If `end > array.length`, `end = array.length`.': function() {
-      fail();
+    '13. If no `end`, `end = array.length`.': function() {
+      var array = [1,2,3,4,5];
+      var resultArray = copyWithin(array, 0, 1);
+      eq(resultArray[3], 5);
+      eq(resultArray[4], 5);
     },
-    '- If `end < 0`, it should copy up to, but not including `array[array.length + end]`': function() {
-      fail();
+    '14. If `end > 0`, it should copy up to, but not including `array[end]`.': function() {
+      var array = [1,2,3,4,5];
+      var resultArray = copyWithin(array, 0, 1, 3);
+      eq(resultArray[1], 3);
+      eq(resultArray[2], 3);
     },
-    '- If `target > start`, the array should be trimmed to fit initial `array.length`.': function() {
-      fail();
+    '15. If `end > array.length`, `end = array.length`.': function() {
+      var array = [1,2,3,4,5];
+      var resultArray = copyWithin(array, 0, 1, 8);
+      eq(resultArray[1], 3);
+      eq(resultArray[4], 5);
     },
-    '- It should work on array-like objects.': function() {
-      fail();
+    '16. If `end < 0`, it should copy up to, but not including `array[array.length + end]`': function() {
+      var array = [1,2,3,4,5];
+      var resultArray = copyWithin(array, 0, 1, -2);
+      eq(resultArray[1], 3);
+      eq(resultArray[2], 3);
+      eq(resultArray[3], 4);
     },
-    '- If `typeof array === 'object' && !array.length`, it should immediately return `array`.': function() {
-      fail();
+    '17. If `target > start`, the array should be trimmed to fit initial `array.length`.': function() {
+      var array = [1,2,3,4,5];
+      var resultArray = copyWithin(array, 2, 0);
+      eq(resultArray[2], 1);
+      eq(resultArray[3], 2);
+      eq(resultArray[4], 3);
+      eq(resultArray.length, array.length);
     },
-    '- It should respect holes.': function() {
-      fail();
+    '18. It should work on array-like objects.': function() {
+      var arrLikeObj = {0:'one', 1:'two', 2:'three', 3:'four', 4:'five', length: 5};
+      var resultArray = copyWithin(arrLikeObj, 0, 1);
+      eq(resultArray[3], 'five');
+      eq(resultArray[4], 'five');
     },
-    '- If `array` is not an object it should throw a `TypeError`.': function() {
-      fail();
+    '19. If `typeof array === \'object\' && !array.length`, it should immediately return `array`.': function() {
+      var arrObj = {0:'one', 1:'two', 2:'three', 3:'four', 4:'five'};
+      var resultObj = copyWithin(arrObj, 0, 1);
+      eq(resultObj, arrObj);
+    },
+    '20. It should respect holes.': function() {
+      var array = [1,2,3,,5];
+      var resultArray = copyWithin(array, 1, 3);
+      eq(1 in resultArray, false);
+      eq(resultArray[2], 5);
+    },
+    '21. If `array` is not an object it should throw a `TypeError`.': function() {
+      try {
+        copyWithin(42);
+      } catch(e) {
+        eq(e.name, 'TypeError');
+      }
     },
     
   });
