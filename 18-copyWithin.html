@@ -56,8 +56,6 @@
       end = arrLength;
     }
     
-
-    // get copied range
     for (var i = start; i < end; i++) {
       if(array[i]) {
         copiedRange[copyIndex] = array[i];
@@ -68,7 +66,6 @@
     var copyEndIndex = target + copiedRange.length;
     copyIndex = 0;
 
-    // put copied range
     for (var j = target; j < copyEndIndex; j++) {
       if (copiedRange[copyIndex]) {
         array[j] = copiedRange[copyIndex];
@@ -76,7 +73,6 @@
         delete array[j];
       }
 
-      // If copied range is shorter than 
       copyIndex++;
     }
 
