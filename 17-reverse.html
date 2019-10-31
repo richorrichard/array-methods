@@ -3,59 +3,99 @@
   
   "use strict";
 
-  var smArray = [1],
-    numArray = [1,2,3],
-    zeroArray = [],
-    noValArray = [,,,,],
-    tenArray = [,3,'test',undefined,6,7,,null,10,true],
-    undefinedArray = [undefined, undefined, undefined],
-    nullArray = [null, null, null],
-    primArray = [true, null, undefined, 42, 'string'],
-    objectArray = [
-      {name: 'Trek', rank: 1},
-      {name: 'Specialized', rank: 2},
-      {name: 'Santa Cruz', rank: 3}
-    ],
-    arrLikeObj = {
-      0: 'foo', 
-      5: 'bar', 
-      length: 6
-    },
-    arrayArray = [
-      [1,2,3],
-      [4,5,6],
-      [7,8,9]
-    ];
+  function reverse(array) {
+    if (!array) {
+      throw new ReferenceError;
+    }
 
+    if (typeof array !== 'object') {
+      throw new TypeError;
+    }
+
+    if (typeof array === 'object' && !array.length) {
+      return array;
+    }
+
+    // Use the prototype slice() implementation to copy array-like-objects also.
+    var tempArray = Array.prototype.slice.call(array);
+    var reverseIndex = 0;
+    
+    for (var i = tempArray.length - 1; i >= 0; i--) {
+      array[reverseIndex] = tempArray[i];
+      reverseIndex++;
+    }
+
+    return array;
+  }
   
   tests({
 
-    '- It should return the same array upon which it was run.': function() {
-      fail();
+    '1. It should return the same array upon which it was run.': function() {
+      var array = [1,2,3];
+      eq(reverse(array), array);
     },
-    '- If no `array`, it should throw a ReferenceError.': function() {
-      fail();
+    '2. If no `array`, it should throw a ReferenceError.': function() {
+      try{
+        reverse();
+      } catch(e) {
+        eq(e.name, 'ReferenceError');
+      }
     },
-    '- It should return all elements of the original array in reverse order.': function() {
-      fail();
+    '3. It should return all elements of the original array in reverse order.': function() {
+      var array = [1,2,3];
+      var resultArray = reverse(array);
+      eq(resultArray[0], 3);
+      eq(resultArray[1], 2);
+      eq(resultArray[2], 1);
     },
-    '- It should respect holes.': function() {
-      fail();
+    '4. It should respect holes.': function() {
+      var array = [1,2,,,3];
+      var resultArray = reverse(array);
+      eq(resultArray[0], 3);
+      eq(resultArray[3], 2);
+      eq(resultArray[4], 1);
     },
-    '- It should not delete or add elements to the original array.': function() {
-      fail();
+    '5. It should not delete or add elements to the original array.': function() {
+      var array = [1,2,3];
+      var resultArray = reverse(array);
+      eq(resultArray.length, 3);
     },
-    '- It should work with all data types.': function() {
-      fail();
+    '6. It should work with all data types.': function() {
+      var array = [1,2,3];
+      var a = reverse([true, 2]);
+      eq(a[1], true);
+      var a = reverse([undefined, 2]);
+      eq(a[1], undefined);
+      var a = reverse([null, 2]);
+      eq(a[1], null);
+      var a = reverse([42, 2]);
+      eq(a[1], 42);
+      var a = reverse(['foo', 2]);
+      eq(a[1], 'foo');
+      var a = reverse([array, 2]);
+      eq(a[1], array);
     },
-    '- It should work with array-like-objects.': function() {
-      fail();
+    '7. It should work with array-like-objects.': function() {
+      var arrLikeObj = {0:'one', 1:'two', 2:'three', length: 3};
+      var resultObj = reverse(arrLikeObj);
+      eq(resultObj[0], 'three');
+      eq(resultObj[1], 'two');
+      eq(resultObj[2], 'one');
+      eq(resultObj.length, 3);
+      
     },
-    '- If `array` is a non-array-like-object, it should immediately return the original object.': function() {
-      fail();
+    '8. If `array` is a non-array-like-object, it should immediately return the original object.': function() {
+      var nonArrLikeObj = {0:'one', 1:'two', 2:'three'};
+      var resultObj = reverse(nonArrLikeObj);
+      eq(resultObj, nonArrLikeObj);
+      eq(resultObj[0], 'one');
+      eq(resultObj[1], 'two');
+      eq(resultObj[2], 'three');
     },
-    '- If `array` is not an object, it should throw TypeError.': function() {
-      fail();
+    '9. If `array` is not an object, it should throw TypeError.': function() {
+      try {reverse(true);} catch(e) {eq(e.name, 'TypeError');}
+      try {reverse(42);} catch(e) {eq(e.name, 'TypeError');}
+      try {reverse('foo');} catch(e) {eq(e.name, 'TypeError');}
     },
     
   });
