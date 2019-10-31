@@ -22,7 +22,9 @@ Returns the reversed array.
 - It should respect holes.
 - It should not delete or add elements to the original array.
 - It should work with all data types.
-
+- It should work with array-like-objects.
+- If `array` is a non-array-like-object, it should immediately return the original object.
+- If `array` is not an object, it should throw TypeError.
 
 <!-- 4. Edge Cases ✓ -->
 
