@@ -1,0 +1,228 @@
+<script src="./simpletest.js"></script>
+<script>
+
+  // This is a robust function, but is not as concise as I would like it to be.
+  // I plan to take some time to forget the peer exercises I reviewed and return at
+  // a later date to rewrite this better. 
+
+  "use strict";
+
+  function sort(array, compareFunction) {
+    // Error Handling
+    if (!array) {
+      throw new ReferenceError;
+    }
+    if (typeof array !== 'object' || array === null) {
+      throw new TypeError;
+    }
+
+    for (var i = 1; i < array.length; i++) {      
+      var a = array[i];
+      var b = array[i-1];
+
+      // stringify
+      if (typeof a === 'number') {
+        a = String(a);
+      }
+      if (typeof b === 'number') {
+        b = String(b);
+      }
+
+      if (compareFunction) {
+        var compareCondition = compareFunction(a, b);
+
+        if (typeof compareCondition !== 'number') {
+          return array;
+        }
+      } else {
+        var compareCondition = 0;
+
+        if (a < b) {
+          compareCondition = -1;
+        }
+
+        if (!(i-1 in array)) {
+          compareCondition = -1;
+        }
+      }
+
+      while (compareCondition < 0) {
+        var floatingValue = array[i];
+        
+        // value replace and handle holes
+        if (i-1 in array) {
+          array[i] = array[i-1];
+        } else {
+          delete array[i];
+        }
+        array[i-1] = floatingValue;
+        i--;
+
+        // Exit while if end of array
+        if (i-1 < 0 || i+1 > array.length) {
+          break;
+        }
+
+        var a = array[i];
+        var b = array[i-1];
+
+        // Reset variables, repeat logic until current element in correct place
+        if (typeof a === 'number') {
+          a = String(a);
+        }
+        if (typeof b === 'number') {
+          b = String(b);
+        }
+
+        if (compareFunction) {
+          var compareCondition = compareFunction(a, b);
+        } else {
+          compareCondition = 0
+
+          if (a < b) {
+            compareCondition = -1;
+          }   
+          
+          if (!(i-1 in array)) {
+            compareCondition = -1;
+          }
+        }
+      } 
+    }
+
+    return array;
+  }
+
+  tests({
+    '1.  It should return the original array, not a copy': function() {
+      var array = [1,3,5,2,4];
+      var sortedArray = sort(array);
+      eq(sortedArray, array);
+    },
+    '2.  If `!array`, throw ReferenceError.': function() {
+      try {
+        sort();
+      } catch(e) {
+        eq(e.name, 'ReferenceError');
+      }
+    },
+    '3.  If `typeof array !== \'object\'`, throw TypeError.': function() {
+      try {
+        sort(42);
+      } catch(e) {
+        eq(e.name, 'TypeError');
+      }
+    },
+    '4.  If no `compareFunction`, and `a = array[i] < b = array[i-1]`, previous element and current element should exchange indexes.': function() {
+      var array = ['b','a'];
+      var sortedArray = sort(array);
+      eq(sortedArray[0], 'a');
+      eq(sortedArray[1], 'b');
+    },
+    '5.  If no `compareFunction`, and `a = array[i] > b = array[i-1]`, current element should remain at current index.': function() {
+      var array = ['a','b'];
+      var sortedArray = sort(array);
+      eq(sortedArray[0], 'a');
+      eq(sortedArray[1], 'b');
+    },
+    '6.  If no `compareFunction`, and `a = array[i] === b = array[i-1]`, current element should remain at current index.': function() {
+      var array = ['b','b'];
+      var sortedArray = sort(array);
+      eq(sortedArray[0], 'b');
+      eq(sortedArray[1], 'b');
+    },
+    '7.  If `compareFunction` returns a non-number, immediately return out of the function without modifying array.': function() {
+      var array = [2,3,1,4,7,4];
+      var sortedArray = sort(array, function() {
+        return 'non-number';
+      });
+      eq(sortedArray[0], 2);
+      eq(sortedArray[1], 3);
+      eq(sortedArray[2], 1);
+    },
+    '8.  If `compareFunction < 0`, previous element and current element should exchange indexes. ': function() {
+      var array = [11111, 2222];
+      var sortedArray = sort(array, function(a,b) {
+        return a-b;
+      }); 
+      eq(sortedArray[0], 2222);
+      eq(sortedArray[1], 11111);
+    },
+    '9.  If `compareFunction > 0`, current element should remain at current index.': function() {
+      var array = [2222, 11111];
+      var sortedArray = sort(array, function(a,b) {
+        return a-b;
+      }); 
+      eq(sortedArray[0], 2222);
+      eq(sortedArray[1], 11111);
+    },
+    '10. If `compareFunction = 0`, current element should remain at current index.': function() {
+      var array = [2222, 2222];
+      var sortedArray = sort(array, function(a,b) {
+        return a-b;
+      }); 
+      eq(sortedArray[0], 2222);
+      eq(sortedArray[1], 2222);
+    },
+    '11. It should not change `array.length`.': function() {
+      var array = [2222, 11111];
+      var sortedArray = sort(array); 
+      eq(sortedArray[0], 11111);
+      eq(sortedArray.length, array.length);
+    },
+    '12. It should compare UTF-16 code values by default.': function() {
+      var array = [5, 44, 333, 2222, 11111];
+      var sortedArray = sort(array); 
+      eq(sortedArray[0], 11111);
+      eq(sortedArray[1], 2222);
+      eq(sortedArray[2], 333);
+      eq(sortedArray[3], 44);
+      eq(sortedArray[4], 5);
+    },
+    '13. It should be case sensative': function() {
+      var array = ['Delta', 'alpha', 'CHARLIE', 'bravo'];
+      var sortedArray = sort(array); 
+      eq(sortedArray[0], 'CHARLIE');
+      eq(sortedArray[1], 'Delta');
+      eq(sortedArray[2], 'alpha');
+      eq(sortedArray[3], 'bravo');
+    },
+    '14. If an element can be sorted, but previous element cannot, current element should be moved before previous element.': function() {
+      var obj = {1:1};
+      var array = [5, obj, 44, , 333, 2222, 11111];
+      var sortedArray = sort(array); 
+      eq(sortedArray[0], 11111);
+      eq(sortedArray[1], 2222);
+      eq(sortedArray[2], 333);
+      eq(sortedArray[3], 44);
+      eq(sortedArray[4], 5);
+      eq(sortedArray[5], obj);
+    },
+    '15. It should work on array-like objects.': function() {
+      var obj = {0:5, 1:44, 2:333, 3:2222, 4:11111, length: 5};
+      var sortedObj = sort(obj); 
+      eq(sortedObj[0], 11111);
+      eq(sortedObj[1], 2222);
+      eq(sortedObj[2], 333);
+      eq(sortedObj[3], 44);
+      eq(sortedObj[4], 5);
+    },
+    '16. It should be able to sort an array of objects by object values': function() {
+      var objArray = [
+        {name: 'Rich', value: 34},
+        {name: 'James', value: 32},
+        {name: 'Kels', value: 35},
+        {name: 'Jessie', value: 30},
+        {name: 'Eli', value: 2},
+      ];
+      var sortedArray = sort(objArray, function(a,b) {
+        return a.value-b.value;
+      }); 
+      eq(sortedArray[0].name, 'Eli');
+      eq(sortedArray[1].name, 'Jessie');
+      eq(sortedArray[2].name, 'James');
+      eq(sortedArray[3].name, 'Rich');
+      eq(sortedArray[4].name, 'Kels');
+    }
+  });
+</script>
