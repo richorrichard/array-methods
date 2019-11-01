@@ -3,34 +3,186 @@
   
   "use strict";
 
-  var smArray = [1],
-    numArray = [1,2,3],
-    zeroArray = [],
-    noValArray = [,,,,],
-    tenArray = [,3,'test',undefined,6,7,,null,10,true],
-    undefinedArray = [undefined, undefined, undefined],
-    nullArray = [null, null, null],
-    primArray = [true, null, undefined, 42, 'string'],
-    objectArray = [
-      {name: 'Trek', rank: 1},
-      {name: 'Specialized', rank: 2},
-      {name: 'Santa Cruz', rank: 3}
-    ],
-    arrLikeObj = {
-      0: 'foo', 
-      5: 'bar', 
-      length: 6
-    },
-    arrayArray = [
-      [1,2,3],
-      [4,5,6],
-      [7,8,9]
-    ];
+  function splice(array, start, deleteCount, ...items) {
+    if (typeof array !== 'object' || array === null) {
+      throw new ReferenceError;
+    }
+    if (!array.length) {
+      throw new TypeError;
+    }
+    
+    var returnArray = [];
+    
+    if (arguments.length < 2) {
+      return returnArray;
+    }
 
-  
+    if (start > array.length) {
+      start = array.length
+    }
+    
+    if (start < 0) {
+      start += array.length;
+    }
+
+    if (arguments.length < 3) {
+      deleteCount = array.length - start;
+    }
+
+    if (deleteCount < 0) {
+      deleteCount = 0;
+    }
+    
+    var returnIndex = 0;
+    var deleteUntil = start + deleteCount;
+
+    // Create return array
+    for (var i = start; i < deleteUntil; i++) {
+      returnArray[returnIndex] = array[i];      
+      returnIndex++;
+    }
+
+    // Delete extra elements
+    for (var i = start; i < array.length; i++) {
+      if (i + deleteCount in array) {
+        array[i] = array[i+deleteCount];     
+      }
+    }
+    array.length -= deleteCount;
+
+    // Insert
+    if (items.length > 0) {
+      var itemsI = 0;
+      var insertShift = items.length;
+      var shiftEndIndex = array.length + insertShift - 1;
+
+      //shift array for insert (if inserting)
+      for (var i = shiftEndIndex; i >= start + insertShift; i--) {
+        array[i] = array[i-items.length];
+        if (Array.isArray(array) === false) {
+          array.length++;
+        }
+      }
+
+      //insert elements
+      for (var i = start; i < start + insertShift; i++) {
+        array[i] = items[itemsI];
+        itemsI++;
+      }
+    }
+    
+
+    return returnArray;
+  }
+
   tests({
 
-    '': function() {},
+    '1.  It should return a new array, not original array.': function() {
+      var array = [1,2,3];
+      var resultArray = splice(array);
+      eq(resultArray === array, false);
+    },
+    '2.  It should return an array containing elements removed from original array.': function() {
+      var array = [1,2,3,4,5];
+      var resultArray = splice(array, 3);
+      eq(resultArray[0], 4);
+      eq(resultArray[1], 5);
+    },
+    '3.  If no `start`, immediately return empty array. ': function() {
+      var array = [1,2,3];
+      var resultArray = splice(array);
+      eq(resultArray.length, 0);
+    },
+    '4.  If no `start`, do not modify original array.': function() {
+      var array = [1,2,3];
+      var testSplice = array;
+      var resultArray = splice(array);
+      eq(testSplice === array, true);
+    },
+    '5.  If `start > 0`, begin removing elements from array at `array[start]`.': function() {
+      var array = [1,2,3];
+      var resultArray = splice(array, 1);
+      eq(resultArray[0], 2);
+      eq(array.length, 1);
+    },
+    '6.  If `start < 0`, begin removing elements from `array[array.length + start]`.': function() {
+      var array = [1,2,3,4,5];
+      var resultArray = splice(array, -2);
+      eq(resultArray[0], 4);
+      eq(resultArray[1], 5);
+    },
+    '7.  If `start > array.length`, `start = array.length`.': function() {
+      var array = [1,2,3,4,5];
+      var resultArray = splice(array, 10);
+      eq(resultArray.length, 0);
+    },
+    '8.  If no `deleteCount`, remove all indexes where `i >= start`.': function() {
+      var array = [1,2,3,4,5];
+      var resultArray = splice(array, 2);
+      eq(resultArray.length, 3);
+      eq(array.length, 2);
+    },
+    '9.  If `deleteCount > 0`, remove all indexes where `start <= i < start + count`.': function() {
+      var array = [1,2,3,4,5];
+      var resultArray = splice(array, 2, 1);
+      eq(resultArray[0], 3);
+      eq(resultArray.length, 1);
+      eq(array[2], 4);
+      eq(array.length, 4);
+    },
+    '10. If `deleteCount <= 0`, do not delete any element. ': function() {
+      var array = [1,2,3,4,5];
+      var resultArray = splice(array, 2, -2);
+      eq(resultArray.length, 0);
+      eq(array.length, 5);
+    },
+    '11. If no `itemN`, it should only remove elements from array.': function() {
+      var array = [1,2,3,4,5];
+      var resultArray = splice(array, 2, 2);
+      eq(resultArray.length, 2);
+      eq(array.length, 3);
+    },    
+    '12. If `itemN`, insert all `itemN` into array at `array[start]` in order.': function() {
+      var array = [1,2,3,6,7];
+      var resultArray = splice(array, 3, 0, 4, 5);
+      eq(resultArray.length, 0);
+      eq(array.length, 7);
+    },
+    '13. It should respect holes.': function() {
+      var array = [1,2,3, , ,6,7];
+      var resultArray = splice(array, 3, 0, 4, 5);
+      eq(resultArray.length, 0);
+      eq(array.length, 9);
+    },
+    '14. It should work with all data types.': function() {
+      var array = [1,2,3,6,7];
+      var resultArray = splice(array, 3, 0, true, undefined, null, 42, 'foo', {1:1});
+      eq(resultArray.length, 0);
+      eq(array.length, 11);
+    },
+    '15. It should work with array-like-objects.': function() {
+      var array = {0:'one', 1:'two', 2:'three', 3:'kill', 4:'six', 5:'seven', length: 6};
+      var resultArray = splice(array, 3, 1, 'four', 'five');
+      eq(resultArray.length, 1);
+      eq(resultArray[0], 'kill');
+      eq(array.length, 7);
+    },
+    '16. If `array` is not an object, throw ReferenceError.': function() {
+      var array = 42;
+      try {
+        splice(array, 1);
+      } catch(e) {
+        eq(e.name, 'ReferenceError');
+      }
+    },
+    '17. If `!array.length`, throw TypeError. ': function() {
+      var array = {1:1};
+      try {
+        splice(array, 1);
+      } catch(e) {
+        eq(e.name, 'TypeError');
+      }
+    },
     
   });
 </script>
