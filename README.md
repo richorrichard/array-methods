@@ -1,4 +1,7 @@
 # Watch and Code Array Methods Recreations
+
+## Update 11/01/19 - exercises have been completed. Still appreciate feedback, if you've got it.
+
 These are my Watch and Code Array Method recreations. I'm still working through them, but would greatly appreciate any feedback or questions. Cheers, and enjoy the _RIVETING_ read..
 
 ## Exercises (with requirements links):
@@ -36,11 +39,12 @@ These are my Watch and Code Array Method recreations. I'm still working through 
 - [x] [Array.prototype.unshift](./15-unshift.html)
   - [unshift() requirements](./requirements/15-unshift.md)
 - [x] [Array.prototype.fill](./16-fill.html)
-  - [fill requirements](./requirements/16-fill.md)
+  - [fill() requirements](./requirements/16-fill.md)
 - [x] [Array.prototype.reverse](./17-reverse.html)
-  - [reverse requirements](./requirements/17-reverse.md)
+  - [reverse() requirements](./requirements/17-reverse.md)
 - [x] [Array.prototype.copyWithin](./18-copyWithin.html)
-  - [copyWithin requirements](./requirements/18-copyWithin.md)
+  - [copyWithin() requirements](./requirements/18-copyWithin.md)
 - [x] [Array.prototype.sort](./19-sort.html)
-  - [sort requirements](./requirements/19-sort.md)
-- [ ] Array.prototype.splice
+  - [sort() requirements](./requirements/19-sort.md)
+- [x] [Array.prototype.splice](./20-splice.html)
+  - [splice() requirements](./requirements/20-splice.md)
