@@ -35,8 +35,12 @@ These are my Watch and Code Array Method recreations. I'm still working through 
   - [shift() requirements](./requirements/14-shift.md)
 - [x] [Array.prototype.unshift](./15-unshift.html)
   - [unshift() requirements](./requirements/15-unshift.md)
-- [ ] Array.prototype.fill
-- [ ] Array.prototype.reverse
-- [ ] Array.prototype.copyWithin
-- [ ] Array.prototype.sort
+- [x] [Array.prototype.fill](./16-fill.html)
+  - [fill requirements](./requirements/16-fill.md)
+- [x] [Array.prototype.reverse](./17-reverse.html)
+  - [reverse requirements](./requirements/17-reverse.md)
+- [x] [Array.prototype.copyWithin](./18-copyWithin.html)
+  - [copyWithin requirements](./requirements/18-copyWithin.md)
+- [x] [Array.prototype.sort](./19-sort.html)
+  - [sort requirements](./requirements/19-sort.md)
 - [ ] Array.prototype.splice
